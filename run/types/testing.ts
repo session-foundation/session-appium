@@ -191,6 +191,7 @@ export type UiAutomatorQuery =
   | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
+  /** The pinned marker carries its row's conversation name in the identifier (iOS). */
   | DISAPPEARING_TIMES
   | UserNameType
   | '😂'
@@ -322,6 +323,7 @@ export type AccessibilityId =
   | 'Hide Note to Self'
   | 'Hide recovery password button'
   | 'Hide Recovery Password Permanently'
+  | 'home-header-pro-badge'
   | 'https://getsession.org/privacy-policy'
   | 'https://getsession.org/terms-of-service'
   | 'Image picker'
@@ -647,6 +649,7 @@ export type Id =
   | 'network.loki.messenger:id/search_cancel'
   | 'network.loki.messenger:id/search_result_title'
   | 'network.loki.messenger:id/sendAcceptsTextView'
+  | 'network.loki.messenger:id/sessionHeaderProBadge'
   | 'network.loki.messenger:id/singleModeImageView'
   | 'network.loki.messenger:id/system_settings_app_icon'
   | 'network.loki.messenger:id/textSendAfterApproval'

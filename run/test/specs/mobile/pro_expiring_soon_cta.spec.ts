@@ -3,7 +3,6 @@ import { test, type TestInfo } from '@playwright/test';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
-import { CTAButtonNegative } from '../../locators/global';
 import { ProSettingsEntry, ProStatsHeader } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
@@ -60,10 +59,7 @@ async function proExpiringSoonCTA(platform: SupportedPlatformsType, testInfo: Te
 
   await test.step('Verify the expiring-soon CTA on app open', async () => {
     await device.checkCTA('proExpiringSoon');
-    // Dismissed through its own button rather than `dismissCTA()`, which taps at a coordinate that
-    // does not close this modal — the next tap then lands on its scrim and the failure surfaces
-    // somewhere unrelated.
-    await device.clickOnElementAll(new CTAButtonNegative(device));
+    await device.dismissCTA('negativeButton');
   });
 
   await test.step('Verify the plan is still active behind it', async () => {

@@ -39,7 +39,7 @@ const waitForHomeScreenAfterOnboarding = async (
     'Home screen not reached after onboarding — checking for a late permission prompt/CTA'
   );
   await handleNotificationPermissions(device, allowNotificationPermissions);
-  await device.dismissCTA(true);
+  await device.dismissCTA('closeButton');
   await device.waitForTextElementToBePresent(new PlusButton(device));
 };
 
@@ -77,7 +77,7 @@ export const restoreAccount = async (
   await handleNotificationPermissions(device, allowNotificationPermissions);
   // A startup CTA (e.g. the "New Hope for Session" donation appeal) can cover the home
   // screen after restore; dismiss it via its close button so the home screen is reachable.
-  await device.dismissCTA(true);
+  await device.dismissCTA('closeButton');
   // Check that we're on the home screen
   await waitForHomeScreenAfterOnboarding(device, allowNotificationPermissions);
 };
@@ -121,7 +121,7 @@ export const restoreAccountNoFallback = async (
   await handleNotificationPermissions(device, allowNotificationPermissions);
   // A startup CTA (e.g. the "New Hope for Session" donation appeal) can cover the home
   // screen after restore; dismiss it via its close button so the home screen is reachable.
-  await device.dismissCTA(true);
+  await device.dismissCTA('closeButton');
   // Check that we're on the home screen
   await waitForHomeScreenAfterOnboarding(device, allowNotificationPermissions);
 };

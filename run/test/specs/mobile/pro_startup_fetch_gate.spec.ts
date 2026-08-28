@@ -4,7 +4,7 @@ import { EXPIRING_SOON_ENTITLEMENT_SECONDS, makeAccountPro } from '../../../shar
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
-import { CTAButtonNegative, CTAHeading } from '../../locators/global';
+import { CTAHeading } from '../../locators/global';
 import { ProSettingsEntry, ProStatsHeader } from '../../locators/pro';
 import { UserSettings } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
@@ -73,10 +73,7 @@ async function proStartupFetchGate(platform: SupportedPlatformsType, testInfo: T
   await test.step('Verify the next launch warns', async () => {
     await forceStopAndRestart(device);
     await device.checkCTA('proExpiringSoon');
-    // Dismissed through its own button rather than `dismissCTA()`, which taps at a coordinate that
-    // does not close this modal — the next tap then lands on its scrim and the failure surfaces
-    // somewhere unrelated.
-    await device.clickOnElementAll(new CTAButtonNegative(device));
+    await device.dismissCTA('negativeButton');
   });
 
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

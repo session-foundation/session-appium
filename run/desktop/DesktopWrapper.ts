@@ -646,6 +646,55 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   }
 
   /**
+   * Open settings and assert THIS account's own avatar does NOT animate there.
+   *
+   * The negative of `assertSettingsAvatarAnimated`, reading the same surface and asserted the opposite
+   * way round: that one can stop the moment it sees a second colour, while this has to settle and then
+   * require every sample to match. A picture sampled before it renders is a single flat colour and so
+   * indistinguishable from a static one, which would pass whatever the client decided.
+   *
+   * The placeholder check is kept for the reason it exists on the peer-facing variant: "the picture was
+   * removed" and "the picture is kept and correctly frozen" are different outcomes, and only the second
+   * is what losing Pro should look like. Without it a client that deleted the picture would pass.
+   */
+  public async assertSettingsAvatarNotAnimated({
+    settleMs = 15_000,
+    samples = 6,
+  }: { settleMs?: number; samples?: number } = {}): Promise<void> {
+    await clickOn(this.page, LeftPane.settingsButton);
+    try {
+      const selector = buildDescendantSelector(Settings.profilePicture, 'img');
+      await this.page.locator(selector).first().waitFor({ state: 'visible', timeout: 30_000 });
+      await sleepFor(settleMs);
+
+      const colors = new Set<string>();
+      for (let i = 0; i < samples; i++) {
+        colors.add(await this.sampleCenterColor(selector));
+        await sleepFor(250);
+      }
+
+      const [sampled] = [...colors];
+      if (colors.size === 1 && GENERATED_AVATAR_COLORS.has(sampled.toLowerCase())) {
+        throw new Error(
+          `The account's own display picture is the generated placeholder (${sampled}) — it is not ` +
+            `there at all, so nothing can be said about whether it animates. Losing Pro should freeze ` +
+            `the picture, not remove it.`
+        );
+      }
+
+      if (colors.size > 1) {
+        throw new Error(
+          `The account's own display picture is still animating (${colors.size} distinct centre colours ` +
+            `across ${samples} samples), for an account that no longer holds Pro.`
+        );
+      }
+    } finally {
+      // Left open, the dialog swallows the next click on anything behind it.
+      await this.closeOpenModals().catch(() => undefined);
+    }
+  }
+
+  /**
    * Open a conversation with a peer once their DISPLAY NAME is showing for it.
    *
    * A conversation this client created itself — by sending first, as `createContact` does — is

@@ -4,7 +4,6 @@ import { tStripped } from '../../../localizer/lib';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
-import { CTAButtonNegative } from '../../locators/global';
 import {
   ProBadgeSettingRow,
   ProFeaturesHeader,
@@ -194,11 +193,7 @@ async function proSettingsExpired(platform: SupportedPlatformsType, testInfo: Te
 
   await test.step('Verify the expiry CTA on app open', async () => {
     await device.checkCTA('proExpired');
-    // Dismissed through its own Cancel button rather than `dismissCTA()`, which falls back to a
-    // tap at (150,150). That tap does not dismiss this modal on iOS, and the *next* tap then lands
-    // on the CTA's scrim — so navigation silently does nothing and the failure surfaces two steps
-    // later as a missing `pro-menu-item`.
-    await device.clickOnElementAll(new CTAButtonNegative(device));
+    await device.dismissCTA('negativeButton');
   });
 
   await test.step('Open Pro settings', async () => {

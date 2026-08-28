@@ -113,7 +113,7 @@ import {
   runScriptAndLog,
   runScriptOrThrow,
 } from '../test/utils/utilities';
-import { CTAConfig, ctaConfigs, CTAType } from './cta';
+import { CTAConfig, ctaConfigs, CTADismissal, CTAType } from './cta';
 import {
   AccessibilityId,
   Coordinates,
@@ -898,12 +898,40 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.onIOS().swipeLeft('Conversation list item', name);
     await this.onAndroid().longPressConversation(name);
     await this.clickOnElementAll(new PinConversationOption(this));
+    await this.waitForConversationListInteractive();
   }
 
   public async unpinConversation(name: string) {
     await this.onIOS().swipeLeft('Conversation list item', name);
     await this.onAndroid().longPressConversation(name);
     await this.clickOnElementAll(new UnpinConversationOption(this));
+    await this.waitForConversationListInteractive();
+  }
+
+  /**
+   * Wait until the conversation list can be interacted with again.
+   *
+   * Clicking a swipe action or context-menu item returns before that menu has closed, so whatever touches
+   * the list next — the following pin, a swipe, a tap on a row — can land on the closing overlay and
+   * either hit the wrong element or be swallowed. The plus button is unrelated to pinning; it is used
+   * because it is only reachable once nothing is covering the list.
+   */
+  private async waitForConversationListInteractive(): Promise<void> {
+    /**
+     * A refused pin raises a CTA instead of returning to the list, so the plus button is legitimately
+     * unreachable and waiting for it would block until the timeout — naming the plus button, several
+     * steps from the refusal that caused it. A CTA up is therefore a settled state too: the caller is
+     * about to assert it.
+     */
+    const ctaShowing = await this.doesElementExist({
+      ...new CTAHeading(this).build(),
+      maxWait: 2_000,
+    });
+    if (ctaShowing) {
+      return;
+    }
+
+    await this.waitForTextElementToBePresent(new PlusButton(this));
   }
 
   public async pressAndHold(accessibilityId: AccessibilityId) {
@@ -2868,33 +2896,56 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   /**
-   * Dismiss any CTA if it shows.
+   * Close a CTA if one is showing, and report whether there was one.
    *
-   * @param useCloseButton - when true, dismiss via the dialog's close ("X") button; when
-   * false (default) dismiss by tapping outside the dialog at (150,150), the original
-   * behaviour. Some dialogs (e.g. the "New Hope for Session" donation appeal) have no
-   * negative button and do NOT dismiss on a scrim/coordinate tap — pass `true` for those.
-   * The X is exposed only by its content description ("Close" on Android, "Close button"
-   * on iOS).
+   * Never an assertion. A CTA raised off a status fetch is up or not depending on whether that fetch has
+   * landed, so its presence races the test — but left up it swallows the interactions behind it and the
+   * failure surfaces far from the cause. Callers that have just asserted a specific CTA can ignore the
+   * return.
+   *
+   * `via` selects the mechanism and the trade-offs between them are on {@link CTADismissal}. The default
+   * scrim tap closes the CTAs raised by an ordinary action; the Pro modals need `negativeButton`, and a
+   * CTA with no negative button needs `closeButton`.
    */
-  public async dismissCTA(useCloseButton: boolean = false): Promise<void> {
+  public async dismissCTA(via: CTADismissal = 'scrim', maxWait: number = 3_000): Promise<boolean> {
     const hasCTAAppeared = await this.doesElementExist({
       ...new CTAHeading(this).build(),
-      maxWait: 3_000,
+      maxWait,
     });
     this.log(`hasCTAAppeared: ${hasCTAAppeared ? 'true' : 'false'}`);
     if (!hasCTAAppeared) {
-      return;
+      return false;
     }
-    this.log('Dismissing CTA');
-    if (useCloseButton) {
-      await this.clickOnElementAll({
-        strategy: 'accessibility id',
-        selector: this.isIOS() ? 'Close button' : 'Close',
-      });
-    } else {
-      await this.clickOnCoordinates(150, 150);
+    this.log(`Dismissing CTA via ${via}`);
+    switch (via) {
+      case 'closeButton':
+        await this.clickOnElementAll({
+          strategy: 'accessibility id',
+          selector: this.isIOS() ? 'Close button' : 'Close',
+        });
+        break;
+      case 'negativeButton':
+        await this.clickOnElementAll(new CTAButtonNegative(this));
+        break;
+      case 'scrim':
+        await this.clickOnCoordinates(150, 150);
+        break;
     }
+
+    /**
+     * Confirm it actually went, rather than that it was clicked.
+     *
+     * The click returns before the modal has finished closing, so the next step can land on the overlay
+     * and fail looking for whatever is behind it — several steps from the dismissal, and reading as a
+     * missing control rather than a modal that is still up: on Android a CTA can still be on screen when
+     * a spec goes looking for the home screen, and the failure then names the plus button.
+     *
+     * Waits on the heading, the same element the presence check above reads, so a dismissal is confirmed
+     * against the thing that defined the CTA as showing in the first place.
+     */
+    await this.verifyElementNotPresent({ ...new CTAHeading(this).build(), maxWait: 10_000 });
+
+    return true;
   }
 
   /** === Session Pro === */

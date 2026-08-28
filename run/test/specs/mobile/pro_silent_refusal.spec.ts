@@ -3,7 +3,7 @@ import { test, type TestInfo } from '@playwright/test';
 import { STANDARD_PIN_LIMIT } from '../../../shared/constants';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { ConversationPinnedIcon, PlusButton } from '../../locators/home';
+import { ConversationPinnedIcon } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
@@ -81,7 +81,6 @@ async function proSilentRefusal(platform: SupportedPlatformsType, testInfo: Test
     // The standard limit applies, because the limit is ACCESS. Pinning up to it must not prompt either.
     for (const name of toPin) {
       await device.pinConversation(name);
-      await device.waitForTextElementToBePresent(new PlusButton(device));
       await device.verifyNoCTAShows();
       await device.waitForTextElementToBePresent(new ConversationPinnedIcon(device, name));
     }
