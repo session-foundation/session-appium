@@ -20,6 +20,10 @@ bothPlatformsIt({
   risk: 'high',
   testCb: resolveONS,
   countOfDevicesNeeded: 1,
+  // `ONS_MAPPINGS.TESTQA` is registered on mainnet. Every other network keeps its own name registry,
+  // and on a freshly built devnet that registry is empty — so the name cannot resolve there however
+  // long the test waits, and a failure would say nothing about ONS.
+  requiresNetwork: 'mainnet',
   allureSuites: {
     parent: 'New Conversation',
     suite: 'New Message',

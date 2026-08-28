@@ -16,8 +16,10 @@ import {
   capturePageSourceOnFailure,
   captureScreenshotsOnFailure,
 } from '../test/utils/failure_artifacts';
+import { getServiceNetwork } from '../test/utils/network_target';
 import { SupportedPlatformsType } from '../test/utils/open_app';
 import { AllureSuiteConfig } from './allure';
+import { ServiceNetwork } from './target';
 import { TestRisk } from './testing';
 
 // Test wrapper configuration
@@ -28,6 +30,18 @@ type MobileItArgs = {
   risk: TestRisk;
   testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
+  /**
+   * The service network this test's fixtures only exist on.
+   *
+   * For a test whose subject is registered on one network and nowhere else — an ONS name is the case
+   * this exists for — running anywhere else asserts something that cannot be true. That is not a flake
+   * and not a defect, so it is skipped with the reason named rather than left as a permanent red that
+   * everyone learns to scroll past.
+   *
+   * Declared rather than checked inside the test, so the constraint is visible in the run output and in
+   * the file, and so the gap it leaves is countable.
+   */
+  requiresNetwork?: ServiceNetwork;
   isPro?: boolean;
   /**
    * How many community rooms this test needs. Against a local SOGS the rooms are created for this
@@ -58,6 +72,7 @@ function mobileIt({
   testCb,
   title,
   shouldSkip = false,
+  requiresNetwork,
   isPro = false,
   countOfDevicesNeeded,
   communityRooms,
@@ -68,9 +83,23 @@ function mobileIt({
   const proTag = isPro ? ' @pro' : '';
   const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices${proTag}`;
 
-  if (shouldSkip) {
-    test.skip(testName, () => {
-      console.info(`\n\n==========> Skipping "${testName}"\n\n`);
+  const networkInUse = getServiceNetwork();
+  const wrongNetwork = requiresNetwork !== undefined && requiresNetwork !== networkInUse;
+
+  if (shouldSkip || wrongNetwork) {
+    const reason = wrongNetwork
+      ? `it needs ${requiresNetwork} and this run is on ${networkInUse}`
+      : 'it is marked shouldSkip';
+    // Logged at declaration as well as annotated: the annotation reaches Allure, but the local
+    // reporter prints only the status, so without this a skipped spec is indistinguishable from one
+    // that silently stopped being collected.
+    console.info(`==========> Skipping "${testName}" — ${reason}`);
+
+    // The reason is given to `test.skip` from inside the body rather than logged from a
+    // `test.skip(title, fn)` callback, which Playwright never runs — so a skip used to arrive with no
+    // stated cause, and a reader could not tell a deliberate skip from a lost one.
+    test(testName, () => {
+      test.skip(true, reason);
     });
     return;
   }
