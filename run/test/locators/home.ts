@@ -66,7 +66,14 @@ export class ConversationPinnedIcon extends LocatorsInterface {
           selector: `//android.view.ViewGroup[android.widget.TextView[@content-desc='Conversation list item' and @text='${this.name}']]/android.widget.ImageView[@resource-id='network.loki.messenger:id/iconPinned']`,
         } as const;
       case 'ios':
-        throw new Error('ConversationPinnedIcon: iOS not yet implemented');
+        // The marker is identical in every row, so iOS carries the conversation name in the IDENTIFIER
+        // rather than the label — a label would be read aloud, and the screen reader has already announced
+        // the name from the cell. Matching the composite id therefore ties the marker to its row without
+        // the id+text pairing that breaks whenever an id is added to an element.
+        return {
+          strategy: 'accessibility id',
+          selector: `Pinned icon: ${this.name}`,
+        } as const;
     }
   }
 }

@@ -191,6 +191,7 @@ export type UiAutomatorQuery =
   | `new UiSelector().text(${string})`;
 
 export type AccessibilityId =
+  /** The pinned marker carries its row's conversation name in the identifier (iOS). */
   | DISAPPEARING_TIMES
   | UserNameType
   | '😂'
@@ -506,7 +507,8 @@ export type AccessibilityId =
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
   | `cta-feature-${number}`
-  | `Disappear after ${DisappearActions} option`;
+  | `Disappear after ${DisappearActions} option`
+  | `Pinned icon: ${string}`;
 
 export type Id =
   | DISAPPEARING_TIMES
