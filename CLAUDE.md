@@ -273,10 +273,21 @@ pnpm test-high-risk-ios          # --grep '@ios @high-risk'
 
 pnpm test-ios-parallel --tier standard   # tiered, 6 sims — fastest full-suite local run
 pnpm test-ios-parallel --list-tiers      # tiers, their cost and their passes
+
+pnpm test-android-parallel --tier full   # tiered, 8 emulators (the pool must already be up)
+pnpm test-android-parallel --list-tiers
 ```
 
-`--tier` provisions throwaway simulators and runs one pass per device class; a `--grep` alongside it
-narrows every pass rather than replacing the device-class filter. See **Parallelism** above.
+`--tier` runs one pass per device class; a `--grep` alongside it narrows every pass rather than
+replacing the device-class filter. See **Parallelism** above.
+
+The two runners differ in one way that matters: the iOS one **provisions** throwaway simulators and
+deletes them afterwards, while the Android one provisions nothing, because Appium will not boot an
+emulator. Bring the pool up with `pnpm create-emulators <n>` first — the runner checks the udids it
+needs are attached and refuses up front, since nothing else validates `workers × devices` against the
+Android pool (`global-setup` does that arithmetic for iOS only). Its worker counts are the arithmetic
+that fills the pool, **not measurements**: nothing above one worker has been timed on Android, and an
+emulator is a QEMU VM costing 5-7 GB, so the iOS numbers do not transfer.
 
 ### How tags work
 

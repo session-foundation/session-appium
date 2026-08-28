@@ -10,10 +10,10 @@
  * import, and anything on stdout here would be parsed as data by the caller.
  */
 import {
+  devicesRequired,
   PARALLEL_TIER_NAMES,
   PARALLEL_TIERS,
   type ParallelTierName,
-  simulatorsRequired,
 } from '../run/constants/parallelism';
 
 function main(): void {
@@ -33,7 +33,7 @@ function main(): void {
   const tier = PARALLEL_TIERS[name as ParallelTierName];
 
   if (wantSims) {
-    console.log(String(simulatorsRequired(tier)));
+    console.log(String(devicesRequired(tier)));
     return;
   }
 

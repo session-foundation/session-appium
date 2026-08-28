@@ -212,12 +212,18 @@ export async function waitForMatchingPlaceholder(
  * `network_page.spec.ts` grew its own `networkDataLoaded` rather than use this: a loader that never
  * cleared used to hang until the test timed out with nothing to go on. Now it fails against this
  * selector, which says what was still spinning.
+ *
+ * `windowMayClose` is for the work that restarts the app (clearing all data): the loader goes away
+ * with the window, which Playwright reports as a target-closed error rather than a hidden element.
  */
 export async function waitForLoadingAnimationToFinish(
   window: Page,
   loader: DataTestId,
-  appearWithinMs = 2_000,
-  finishWithinMs = 60_000
+  {
+    appearWithinMs = 2_000,
+    finishWithinMs = 60_000,
+    windowMayClose = false,
+  }: { appearWithinMs?: number; finishWithinMs?: number; windowMayClose?: boolean } = {}
 ) {
   const selector = buildSelectorEscapeText({ strategy: 'data-testid', selector: loader });
 
@@ -234,8 +240,21 @@ export async function waitForLoadingAnimationToFinish(
   }
 
   console.info(`${loader} was found, waiting for it to be gone`);
-  await window.waitForSelector(selector, { timeout: finishWithinMs, state: 'hidden' });
+  try {
+    await window.waitForSelector(selector, { timeout: finishWithinMs, state: 'hidden' });
+  } catch (e) {
+    if (!windowMayClose || !windowWentAway(window, e as Error)) {
+      throw e;
+    }
+    console.info(`${loader} went away with its window — the app restarted`);
+    return;
+  }
   console.info('Loading animation has finished');
+}
+
+/** `isClosed()` does not always flip before the pending wait rejects, hence the message check too. */
+function windowWentAway(window: Page, e: Error): boolean {
+  return window.isClosed() || /closed/i.test(e.message);
 }
 
 /**
