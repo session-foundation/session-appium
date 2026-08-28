@@ -917,6 +917,20 @@ export class DeviceWrapper implements IMobileWrapper {
    * because it is only reachable once nothing is covering the list.
    */
   private async waitForConversationListInteractive(): Promise<void> {
+    /**
+     * A refused pin raises a CTA instead of returning to the list, so the plus button is legitimately
+     * unreachable and waiting for it would block until the timeout — naming the plus button, several
+     * steps from the refusal that caused it. A CTA up is therefore a settled state too: the caller is
+     * about to assert it.
+     */
+    const ctaShowing = await this.doesElementExist({
+      ...new CTAHeading(this).build(),
+      maxWait: 2_000,
+    });
+    if (ctaShowing) {
+      return;
+    }
+
     await this.waitForTextElementToBePresent(new PlusButton(this));
   }
 
