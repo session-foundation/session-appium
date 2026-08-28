@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 
-import type { ServiceNetwork } from '../run/types/target';
+import type { ClientPlatform, ServiceNetwork } from '../run/types/target';
 
 import {
   devicesRequired,
@@ -11,16 +11,16 @@ import {
 import { ALLOWED_NETWORKS } from '../run/test/utils/network_target';
 
 /**
- * The parts of the parallel runners that are the same on both platforms.
+ * The whole of a tiered parallel run, for both platforms.
  *
- * `run_ios_parallel.ts` and `run_android_parallel.ts` differ in what they have to arrange before a
- * run — the iOS one creates and deletes a simulator pool, the Android one can only check that an
- * already-booted one is there — but everything from argument parsing to the pass loop was the same
- * code twice. The split here is along that line: this module owns the shape of a tiered run, and each
- * runner owns its own devices.
+ * `run_ios_parallel.ts` and `run_android_parallel.ts` differ in exactly one thing: what they have to
+ * arrange before a run. The iOS one creates and deletes a simulator pool; the Android one can only
+ * check that an already-booted one is there, because Appium will not boot an emulator. That is the
+ * `prepareDevices` hook, and everything else — argument parsing, validation, the child environment,
+ * the pass loop, cleanup and the exit status — is `runParallelSuite` here.
  *
- * Nothing here knows which platform it is serving; the caller passes the tier table, the noun for its
- * devices and the env var its workers count lives in.
+ * Nothing in this module knows which platform it is serving; the caller passes the tier table, the
+ * noun for its devices and the env var its worker count lives in.
  */
 
 /** Flags both runners accept. A platform's own flags extend this. */
@@ -44,16 +44,26 @@ export type ExtraFlags<T> = {
   value?: Record<string, (args: T, value: string) => void>;
 };
 
-/** Accepts both `--flag value` and `--flag=value`; the boolean says whether `next` was consumed. */
+/**
+ * Accepts both `--flag value` and `--flag=value`; the boolean says whether `next` was consumed.
+ *
+ * A missing value is refused rather than read as empty: `--network` and `--grep` would otherwise
+ * silently fall back to their defaults, and an unnoticed `--network` default provisions the pool and
+ * runs the suite against the wrong network.
+ */
 function readValue(current: string, next: string | undefined): [string, boolean] {
   const eq = current.indexOf('=');
-  if (eq !== -1) {
-    return [current.slice(eq + 1), false];
+  const [value, consumedNext] = eq !== -1 ? [current.slice(eq + 1), false] : [next ?? '', true];
+
+  if (!value || value.startsWith('--')) {
+    console.error(`Missing value for ${eq === -1 ? current : current.slice(0, eq)}.`);
+    process.exit(1);
   }
-  return [next ?? '', true];
+
+  return [value, consumedNext];
 }
 
-export function parseParallelArgs<T extends ParallelArgsBase>({
+function parseParallelArgs<T extends ParallelArgsBase>({
   argv,
   defaults,
   tierNames,
@@ -127,23 +137,52 @@ export function parseParallelArgs<T extends ParallelArgsBase>({
 }
 
 /**
+ * What one platform's runner has to say about itself. Everything else is shared.
+ */
+export type ParallelSuite<T extends ParallelArgsBase> = {
+  platform: ClientPlatform & ('android' | 'ios');
+  /** Singular, for the messages: "simulator" / "emulator". */
+  deviceNoun: string;
+  /** The platform filter a run falls back to when no --grep is given. */
+  defaultGrep: string;
+  workersEnvVar: 'PLAYWRIGHT_WORKERS_COUNT_ANDROID' | 'PLAYWRIGHT_WORKERS_COUNT_IOS';
+  maxDevices: number;
+  tiers: Record<string, ParallelTier>;
+  tierNames: readonly string[];
+  tiersPreamble: string;
+  defaults: T;
+  /** Flags only this platform takes, e.g. --keep and --runtime on iOS. */
+  extraFlags?: ExtraFlags<T>;
+  /**
+   * The one thing the platforms do not share: iOS creates the pool it just sized, Android can only
+   * check that one is attached. Returning env merges it into the child's (iOS passes its new UDIDs
+   * that way); returning a cleanup runs it once, whether the run finished or threw.
+   */
+  prepareDevices: (args: T, deviceCount: number) => DevicePrep | void;
+};
+
+export type DevicePrep = { env?: NodeJS.ProcessEnv; cleanup?: () => void };
+
+/**
+ * Both suites live in the `mobile` project. Passing it keeps a desktop or cross-platform title that
+ * happens to contain `@ios`/`@android` out of the run — no title does today, so this changes nothing
+ * yet; it is what stops one appearing from silently widening a mobile run.
+ */
+const MOBILE_PROJECT_ARGS = ['--project', 'mobile'];
+
+/**
  * How many devices the run will draw, refusing anything the pool cannot serve.
  *
  * Checked before either runner touches a device: on iOS an invalid `--network` would otherwise create
  * the whole simulator pool before failing downstream, and on Android an over-subscribed run would
  * reach the tests and fail each one individually.
  */
-export function validateParallelArgs<T extends ParallelArgsBase>({
-  args,
-  tiers,
-  maxDevices,
-  deviceNoun,
-}: {
-  args: T;
-  tiers: Record<string, ParallelTier>;
-  maxDevices: number;
-  deviceNoun: string;
-}): number {
+function validateParallelArgs<T extends ParallelArgsBase>(
+  suite: ParallelSuite<T>,
+  args: T
+): number {
+  const { tiers, maxDevices, deviceNoun } = suite;
+
   if (args.network && !ALLOWED_NETWORKS.includes(args.network as ServiceNetwork)) {
     console.error(`Invalid --network "${args.network}". Use ${ALLOWED_NETWORKS.join(' | ')}.`);
     process.exit(1);
@@ -189,18 +228,13 @@ export function validateParallelArgs<T extends ParallelArgsBase>({
   return total;
 }
 
-export function printTiers({
+function printTiers<T extends ParallelArgsBase>({
   tiers,
   tierNames,
   deviceNoun,
-  preamble,
-}: {
-  tiers: Record<string, ParallelTier>;
-  tierNames: readonly string[];
-  deviceNoun: string;
-  preamble: string;
-}): void {
-  console.log(`\n${preamble}\n`);
+  tiersPreamble,
+}: ParallelSuite<T>): void {
+  console.log(`\n${tiersPreamble}\n`);
   for (const name of tierNames) {
     const tier = tiers[name];
     console.log(`  ${name} — ${tier.summary}`);
@@ -216,7 +250,7 @@ export function printTiers({
 }
 
 /** Runs one Playwright invocation to completion and resolves with its exit status. */
-export function runPlaywright(playwrightArgs: string[], env: NodeJS.ProcessEnv): Promise<number> {
+function runPlaywright(playwrightArgs: string[], env: NodeJS.ProcessEnv): Promise<number> {
   return new Promise((resolve, reject) => {
     console.log(`\nRunning: npx ${playwrightArgs.join(' ')}\n`);
     const child = spawn('npx', playwrightArgs, { stdio: 'inherit', env });
@@ -244,56 +278,40 @@ export function runPlaywright(playwrightArgs: string[], env: NodeJS.ProcessEnv):
   });
 }
 
-export type PassResult = { pass: ParallelPass; code: number };
+type PassResult = { pass: ParallelPass; code: number };
 
-export function printTierSummary(name: string, results: PassResult[]): void {
+function printTierSummary(name: string, deviceNoun: string, results: PassResult[]): void {
   console.log(`\n=== tier "${name}" summary ===`);
   for (const { pass, code } of results) {
     const status = code === 0 ? 'pass' : `FAILED (exit ${code})`;
-    console.log(`  @${pass.devices}-devices x${pass.workers} worker(s): ${status}`);
+    console.log(
+      `  @${pass.devices}-devices x${pass.workers} worker(s) (${deviceNoun}s): ${status}`
+    );
   }
   console.log('');
 }
 
 /**
- * One Playwright invocation per device class, in sequence.
+ * One Playwright invocation per device class, in sequence, resolving with the run's exit status.
  *
  * A failing pass does NOT stop the ones after it: a regression run is worth completing so you see
- * every device class rather than everything up to the first breakage. The caller decides the exit
- * status from the returned codes.
+ * every device class rather than everything up to the first breakage.
  */
-export async function runTierPasses({
-  tierName,
-  tier,
-  platform,
-  grep,
-  defaultGrep,
-  workersEnvVar,
-  deviceNoun,
-  baseEnv,
-  playwrightArgs,
-  passthrough,
-}: {
-  tierName: string;
-  tier: ParallelTier;
-  platform: 'android' | 'ios';
-  grep: string;
-  defaultGrep: string;
-  workersEnvVar: string;
-  deviceNoun: string;
-  baseEnv: NodeJS.ProcessEnv;
-  /** Anything to put before `--grep`, e.g. `['--project', 'mobile']`. */
-  playwrightArgs: string[];
-  passthrough: string[];
-}): Promise<PassResult[]> {
+async function runTier<T extends ParallelArgsBase>(
+  suite: ParallelSuite<T>,
+  args: T,
+  tierName: string,
+  baseEnv: NodeJS.ProcessEnv
+): Promise<number> {
+  const { platform, deviceNoun, defaultGrep, workersEnvVar } = suite;
   const results: PassResult[] = [];
 
-  for (const pass of tier.passes) {
+  for (const pass of suite.tiers[tierName].passes) {
     // The pass owns the platform and device-count filter; a caller-supplied --grep is ANDed on top as
     // a further lookahead rather than replacing it, so `--grep '@high-risk'` narrows each pass instead
     // of selecting the wrong device class.
     const passFilter = passGrep(pass, platform);
-    const combined = grep === defaultGrep ? passFilter : `${passFilter}(?=.*${grep})`;
+    const combined = args.grep === defaultGrep ? passFilter : `${passFilter}(?=.*${args.grep})`;
 
     console.log(
       `\n=== tier "${tierName}": @${pass.devices}-devices, ${pass.workers} worker(s), ` +
@@ -304,13 +322,13 @@ export async function runTierPasses({
       [
         'playwright',
         'test',
-        ...playwrightArgs,
+        ...MOBILE_PROJECT_ARGS,
         '--grep',
         combined,
         // An empty pass is not a failure: an extra --grep can legitimately clear one device class
         // while the others still have work to do.
         '--pass-with-no-tests',
-        ...passthrough,
+        ...args.passthrough,
       ],
       {
         ...baseEnv,
@@ -322,5 +340,69 @@ export async function runTierPasses({
     results.push({ pass, code });
   }
 
-  return results;
+  printTierSummary(tierName, deviceNoun, results);
+
+  return results.some(r => r.code !== 0) ? 1 : 0;
+}
+
+/** Parses, validates, provisions, runs, cleans up, and exits with the run's status. */
+export async function runParallelSuite<T extends ParallelArgsBase>(
+  suite: ParallelSuite<T>,
+  argv: string[]
+): Promise<never> {
+  const args = parseParallelArgs<T>({
+    argv,
+    defaults: suite.defaults,
+    tierNames: suite.tierNames,
+    extra: suite.extraFlags,
+  });
+
+  if (args.listTiers) {
+    printTiers(suite);
+    process.exit(0);
+  }
+
+  const deviceCount = validateParallelArgs(suite, args);
+  const prep = suite.prepareDevices(args, deviceCount) ?? {};
+
+  const childEnv: NodeJS.ProcessEnv = {
+    ...process.env,
+    ...prep.env,
+    PLATFORM: suite.platform,
+    [suite.workersEnvVar]: String(args.workers),
+    DEVICES_PER_TEST_COUNT: String(args.devicesPerWorker),
+  };
+  // Silences the driver's per-command logging; a tiered run is long enough that the noise buries
+  // the reporter's own output.
+  childEnv._TESTING = childEnv._TESTING ?? '1';
+  // Left unset otherwise, so .env's NETWORK_TARGET is respected. Devnet also needs DEVNET_SEED_URL
+  // in .env — everything else about it is discovered (see run/test/utils/network_target.ts).
+  if (args.network) {
+    childEnv.NETWORK_TARGET = args.network;
+  }
+
+  let cleanedUp = false;
+  const cleanup = () => {
+    if (cleanedUp) {
+      return;
+    }
+    cleanedUp = true;
+    prep.cleanup?.();
+  };
+
+  try {
+    const code = args.tier
+      ? await runTier(suite, args, args.tier, childEnv)
+      : await runPlaywright(
+          ['playwright', 'test', ...MOBILE_PROJECT_ARGS, '--grep', args.grep, ...args.passthrough],
+          childEnv
+        );
+    cleanup();
+    // Preserve the child's exit status so CI/other callers see the real result.
+    process.exit(code);
+  } catch (err) {
+    console.error('Failed to start Playwright:', err);
+    cleanup();
+    process.exit(1);
+  }
 }

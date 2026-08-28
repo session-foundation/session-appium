@@ -8,15 +8,7 @@ import {
 } from '../run/constants/parallelism';
 import { getAdbFullPath } from '../run/test/utils/binaries';
 import { BASE_PORT, MAX_EMULATORS } from './android_config';
-import {
-  type ParallelArgsBase,
-  parseParallelArgs,
-  printTiers,
-  printTierSummary,
-  runPlaywright,
-  runTierPasses,
-  validateParallelArgs,
-} from './parallel_shared';
+import { type ParallelArgsBase, runParallelSuite } from './parallel_shared';
 
 /**
  * Parallel Android test runner — the counterpart of `run_ios_parallel.ts`.
@@ -55,23 +47,6 @@ const DEFAULT_GREP = '@android';
 
 type ParsedArgs = ParallelArgsBase & { tier?: AndroidParallelTierName };
 
-function parseArgs(argv: string[]): ParsedArgs {
-  return parseParallelArgs<ParsedArgs>({
-    argv,
-    tierNames: ANDROID_PARALLEL_TIER_NAMES,
-    defaults: {
-      // Defaults to the whole suite on one worker: the pool has to be booted already, so guessing at
-      // a wider one would fail the pool check rather than run anything.
-      workers: 1,
-      devicesPerWorker: 4,
-      grep: DEFAULT_GREP,
-      listTiers: false,
-      explicitPools: false,
-      passthrough: [],
-    },
-  });
-}
-
 /** The udids a pool of `count` emulators occupies, in the order the suite allocates them. */
 function poolUdids(count: number): string[] {
   return Array.from({ length: count }, (_, i) => `emulator-${BASE_PORT + i * 2}`);
@@ -98,13 +73,19 @@ function attachedEmulators(): Set<string> {
 }
 
 /**
- * Refuse before Playwright starts if the pool the run needs is not up.
+ * All this runner provisions: nothing. Appium will not boot an emulator, so refuse before Playwright
+ * starts if the pool the run needs is not up.
  *
  * Worth doing here because nothing downstream does: `global-setup` only checks this arithmetic for
  * iOS, so an over-subscribed Android run reaches the tests and fails each one individually with
  * `Invalid actual capability given: N`, which reads as a suite bug rather than a missing emulator.
  */
 function requirePool(needed: number): void {
+  if (!process.env.ANDROID_APK) {
+    console.error('ANDROID_APK is not set — point it at a QA/AQA build first.');
+    process.exit(1);
+  }
+
   // `needed <= MAX_EMULATORS` already, from the shared validator.
   const wanted = poolUdids(needed);
   const attached = attachedEmulators();
@@ -122,84 +103,28 @@ function requirePool(needed: number): void {
   console.log(`✓ ${needed} emulator(s) attached: ${wanted.join(', ')}`);
 }
 
-function validate(args: ParsedArgs): number {
-  if (!process.env.ANDROID_APK) {
-    console.error('ANDROID_APK is not set — point it at a QA/AQA build first.');
-    process.exit(1);
-  }
-
-  return validateParallelArgs({
-    args,
-    tiers: ANDROID_PARALLEL_TIERS,
-    maxDevices: MAX_EMULATORS,
+void runParallelSuite<ParsedArgs>(
+  {
+    platform: 'android',
     deviceNoun: 'emulator',
-  });
-}
-
-function showTiers(): void {
-  printTiers({
+    defaultGrep: DEFAULT_GREP,
+    workersEnvVar: 'PLAYWRIGHT_WORKERS_COUNT_ANDROID',
+    maxDevices: MAX_EMULATORS,
     tiers: ANDROID_PARALLEL_TIERS,
     tierNames: ANDROID_PARALLEL_TIER_NAMES,
-    deviceNoun: 'emulator',
-    preamble: 'Available tiers (worker counts are unmeasured — see run/constants/parallelism.ts):',
-  });
-}
-
-async function main(): Promise<void> {
-  const args = parseArgs(process.argv.slice(2));
-  if (args.listTiers) {
-    showTiers();
-    return;
-  }
-
-  const needed = validate(args);
-  requirePool(needed);
-
-  const childEnv: NodeJS.ProcessEnv = { ...process.env };
-  childEnv.PLATFORM = 'android';
-  childEnv.PLAYWRIGHT_WORKERS_COUNT_ANDROID = String(args.workers);
-  childEnv.DEVICES_PER_TEST_COUNT = String(args.devicesPerWorker);
-  // Silences the driver's per-command logging; a tiered run is long enough that the noise buries
-  // the reporter's own output.
-  childEnv._TESTING = childEnv._TESTING ?? '1';
-  // Left unset otherwise, so .env's NETWORK_TARGET is respected.
-  if (args.network) {
-    childEnv.NETWORK_TARGET = args.network;
-  }
-
-  // `--project mobile` because the Android specs share the project with iOS and, unlike `@ios`, the
-  // `@android` tag alone does not exclude the desktop project's own titles.
-  const projectArgs = ['--project', 'mobile'];
-
-  try {
-    if (args.tier) {
-      const results = await runTierPasses({
-        tierName: args.tier,
-        tier: ANDROID_PARALLEL_TIERS[args.tier],
-        platform: 'android',
-        grep: args.grep,
-        defaultGrep: DEFAULT_GREP,
-        workersEnvVar: 'PLAYWRIGHT_WORKERS_COUNT_ANDROID',
-        deviceNoun: 'emulator',
-        baseEnv: childEnv,
-        playwrightArgs: projectArgs,
-        passthrough: args.passthrough,
-      });
-
-      printTierSummary(args.tier, results);
-      process.exit(results.some(r => r.code !== 0) ? 1 : 0);
-    }
-
-    const code = await runPlaywright(
-      ['playwright', 'test', ...projectArgs, '--grep', args.grep, ...args.passthrough],
-      childEnv
-    );
-    // Preserve the child's exit status so CI/other callers see the real result.
-    process.exit(code);
-  } catch (err) {
-    console.error('Failed to start Playwright:', err);
-    process.exit(1);
-  }
-}
-
-void main();
+    tiersPreamble:
+      'Available tiers (worker counts are unmeasured — see run/constants/parallelism.ts):',
+    defaults: {
+      // Defaults to the whole suite on one worker: the pool has to be booted already, so guessing at
+      // a wider one would fail the pool check rather than run anything.
+      workers: 1,
+      devicesPerWorker: 4,
+      grep: DEFAULT_GREP,
+      listTiers: false,
+      explicitPools: false,
+      passthrough: [],
+    },
+    prepareDevices: (_args, deviceCount) => requirePool(deviceCount),
+  },
+  process.argv.slice(2)
+);

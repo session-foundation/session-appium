@@ -9,15 +9,7 @@ import { type Simulator } from '../run/test/utils/capabilities_ios';
 import { ensureWdaBuilt } from './build_wda';
 import { createIOSSimulators, resolveDeviceConfig } from './create_ios_simulators';
 import { deleteSimulators } from './ios_shared';
-import {
-  type ParallelArgsBase,
-  parseParallelArgs,
-  printTiers,
-  printTierSummary,
-  runPlaywright,
-  runTierPasses,
-  validateParallelArgs,
-} from './parallel_shared';
+import { type ParallelArgsBase, runParallelSuite } from './parallel_shared';
 
 /**
  * Self-contained parallel iOS test runner.
@@ -89,40 +81,6 @@ type ParsedArgs = ParallelArgsBase & {
   runtime?: string;
 };
 
-function parseArgs(argv: string[]): ParsedArgs {
-  return parseParallelArgs<ParsedArgs>({
-    argv,
-    tierNames: PARALLEL_TIER_NAMES,
-    defaults: {
-      workers: 2,
-      devicesPerWorker: 2,
-      grep: DEFAULT_GREP,
-      keep: false,
-      listTiers: false,
-      explicitPools: false,
-      passthrough: [],
-    },
-    extra: {
-      boolean: { '--keep': args => void (args.keep = true) },
-      value: { '--runtime': (args, value) => void (args.runtime = value) },
-    },
-  });
-}
-
-function validate(args: ParsedArgs): number {
-  if (!process.env.IOS_APP_PATH_PREFIX) {
-    console.error('IOS_APP_PATH_PREFIX is not set — point it at a simulator Session.app first.');
-    process.exit(1);
-  }
-
-  return validateParallelArgs({
-    args,
-    tiers: PARALLEL_TIERS,
-    maxDevices: MAX_SIMULATORS,
-    deviceNoun: 'simulator',
-  });
-}
-
 function printKeepInfo(simulators: Simulator[]): void {
   console.log(`\nLeaving ${simulators.length} simulator(s) in place (--keep).`);
   console.log('To reuse them with `pnpm test-ios`, put these lines in your .env:\n');
@@ -132,22 +90,18 @@ function printKeepInfo(simulators: Simulator[]): void {
   console.log('`xcrun simctl delete <udid>`.\n');
 }
 
-function showTiers(): void {
-  printTiers({
-    tiers: PARALLEL_TIERS,
-    tierNames: PARALLEL_TIER_NAMES,
-    deviceNoun: 'simulator',
-    preamble: 'Available tiers (see run/constants/parallelism.ts for the measurements):',
-  });
-}
-
-async function main(): Promise<void> {
-  const args = parseArgs(process.argv.slice(2));
-  if (args.listTiers) {
-    showTiers();
-    return;
+/**
+ * The throwaway pool, which is all this runner does that the Android one cannot.
+ *
+ * The UDIDs go into the child's environment only: `capabilities_ios` reads IOS_N_SIMULATOR from
+ * process.env and its own `dotenv.config()` does not override an already-set var, so these win over
+ * any .env entries and the developer's .env is left untouched.
+ */
+function createPool(args: ParsedArgs, totalSimulators: number) {
+  if (!process.env.IOS_APP_PATH_PREFIX) {
+    console.error('IOS_APP_PATH_PREFIX is not set — point it at a simulator Session.app first.');
+    process.exit(1);
   }
-  const totalSimulators = validate(args);
 
   // Build the WebDriverAgent runner once up front so the driver reuses it across every simulator
   // instead of building/launching WDA per session (the slowest, flakiest part of a cold-sim
@@ -162,71 +116,49 @@ async function main(): Promise<void> {
   const deviceConfig = resolveDeviceConfig({ runtime: args.runtime });
   const simulators = createIOSSimulators({ ...deviceConfig, totalSimulators });
 
-  // Inject the freshly-created UDIDs into the child's environment only. capabilities_ios reads
-  // IOS_N_SIMULATOR from process.env; dotenv.config() there does NOT override already-set vars,
-  // so these win over any .env entries and the developer's .env is left untouched.
-  const childEnv: NodeJS.ProcessEnv = { ...process.env };
+  const env: NodeJS.ProcessEnv = {};
   simulators.forEach((sim, i) => {
-    childEnv[`IOS_${i + 1}_SIMULATOR`] = sim.udid;
+    env[`IOS_${i + 1}_SIMULATOR`] = sim.udid;
   });
-  childEnv.PLATFORM = 'ios';
-  childEnv.PLAYWRIGHT_WORKERS_COUNT_IOS = String(args.workers);
-  childEnv.DEVICES_PER_TEST_COUNT = String(args.devicesPerWorker);
-  childEnv._TESTING = childEnv._TESTING ?? '1';
-  // Service network selection. Devnet also needs DEVNET_SEED_URL in .env — the pubkey and storage
-  // ports are discovered from that seed node (see run/test/utils/network_target.ts), so nothing else
-  // is required. Left unset here so .env's NETWORK_TARGET is respected.
-  if (args.network) {
-    childEnv.NETWORK_TARGET = args.network;
-  }
 
-  let cleanedUp = false;
-  const cleanup = () => {
-    if (cleanedUp) {
-      return;
-    }
-    cleanedUp = true;
-    if (args.keep) {
-      printKeepInfo(simulators);
-      return;
-    }
-    console.log('\nDeleting temporary simulators...');
-    const deleted = deleteSimulators(simulators.map(s => s.udid));
-    console.log(`✓ Deleted ${deleted} simulator(s)`);
+  return {
+    env,
+    cleanup: () => {
+      if (args.keep) {
+        printKeepInfo(simulators);
+        return;
+      }
+      console.log('\nDeleting temporary simulators...');
+      const deleted = deleteSimulators(simulators.map(s => s.udid));
+      console.log(`✓ Deleted ${deleted} simulator(s)`);
+    },
   };
-
-  try {
-    if (args.tier) {
-      const results = await runTierPasses({
-        tierName: args.tier,
-        tier: PARALLEL_TIERS[args.tier],
-        platform: 'ios',
-        grep: args.grep,
-        defaultGrep: DEFAULT_GREP,
-        workersEnvVar: 'PLAYWRIGHT_WORKERS_COUNT_IOS',
-        deviceNoun: 'simulator',
-        baseEnv: childEnv,
-        playwrightArgs: [],
-        passthrough: args.passthrough,
-      });
-
-      printTierSummary(args.tier, results);
-      cleanup();
-      process.exit(results.some(r => r.code !== 0) ? 1 : 0);
-    }
-
-    const code = await runPlaywright(
-      ['playwright', 'test', '--grep', args.grep, ...args.passthrough],
-      childEnv
-    );
-    cleanup();
-    // Preserve the child's exit status so CI/other callers see the real result.
-    process.exit(code);
-  } catch (err) {
-    console.error('Failed to start Playwright:', err);
-    cleanup();
-    process.exit(1);
-  }
 }
 
-void main();
+void runParallelSuite<ParsedArgs>(
+  {
+    platform: 'ios',
+    deviceNoun: 'simulator',
+    defaultGrep: DEFAULT_GREP,
+    workersEnvVar: 'PLAYWRIGHT_WORKERS_COUNT_IOS',
+    maxDevices: MAX_SIMULATORS,
+    tiers: PARALLEL_TIERS,
+    tierNames: PARALLEL_TIER_NAMES,
+    tiersPreamble: 'Available tiers (see run/constants/parallelism.ts for the measurements):',
+    defaults: {
+      workers: 2,
+      devicesPerWorker: 2,
+      grep: DEFAULT_GREP,
+      keep: false,
+      listTiers: false,
+      explicitPools: false,
+      passthrough: [],
+    },
+    extraFlags: {
+      boolean: { '--keep': args => void (args.keep = true) },
+      value: { '--runtime': (args, value) => void (args.runtime = value) },
+    },
+    prepareDevices: createPool,
+  },
+  process.argv.slice(2)
+);
