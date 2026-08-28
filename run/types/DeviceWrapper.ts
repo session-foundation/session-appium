@@ -1167,6 +1167,22 @@ export class DeviceWrapper implements IMobileWrapper {
       return Boolean(value && normalize(value) === normalize(labelToLookFor));
     });
 
+    if (!matching) {
+      // A label mismatch otherwise reports only that the element was not found, which reads as a wrong
+      // locator rather than as copy that differs by a character. Both sides are logged normalised, so
+      // what is compared is what is shown.
+      const seen = await Promise.all(
+        elements.map(element => this.getAttribute('label', element.ELEMENT).catch(() => null))
+      );
+      this.log(
+        `No label matched. Wanted: "${normalize(labelToLookFor)}". Saw: ` +
+          seen
+            .filter((value): value is string => Boolean(value))
+            .map(value => `"${normalize(value)}"`)
+            .join(', ')
+      );
+    }
+
     return matching || null;
   }
 
