@@ -1,6 +1,5 @@
 import type { TestInfo } from '@playwright/test';
 
-import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { SafariAddressBar, URLInputField } from '../../locators/browsers';
@@ -13,6 +12,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { checkOpenUrlDialogStrings } from '../../utils/open_url_dialog';
 import { assertUrlIsReachable, ensureHttpsURL, verify } from '../../utils/utilities';
 
 bothPlatformsIt({
@@ -33,10 +33,7 @@ async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInf
   await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new DonationsMenuItem(device));
-  await device.checkModalStrings(
-    tStripped('urlOpen'),
-    tStripped('urlOpenDescription', { url: linkURL })
-  );
+  await checkOpenUrlDialogStrings(device, linkURL);
   await device.clickOnElementAll(new OpenLinkButton(device));
   if (platform === 'ios') {
     // Tap the Safari address bar to reveal the URL

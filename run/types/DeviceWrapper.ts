@@ -2835,7 +2835,14 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   // Sanitize strings by removing new lines and whitespace sequences
-  private sanitizeString(input: string): string {
+  /**
+   * Collapse rendered whitespace so copy can be compared against its localized source.
+   *
+   * A client is free to break one localized string across lines — the "Open URL" confirmation renders
+   * the interpolated URL as its own paragraph — and that layout is not part of what the string says.
+   * Public because assertions outside this class compare rendered copy too.
+   */
+  public sanitizeString(input: string): string {
     // Handle space + newlines as a unit
     return input.replace(/\s*\n+/g, ' ').trim();
   }

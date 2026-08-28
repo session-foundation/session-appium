@@ -16,6 +16,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { checkOpenUrlDialogStrings } from '../../utils/open_url_dialog';
 import { assertUrlIsReachable } from '../../utils/utilities';
 
 bothPlatformsIt({
@@ -60,7 +61,7 @@ async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: 
     await device.clickOnElementAll(new ReviewPromptOpenSurveyButton(device));
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
-    await device.checkModalStrings(tStripped('urlOpen'), tStripped('urlOpenDescription', { url }));
+    await checkOpenUrlDialogStrings(device, url);
     await assertUrlIsReachable(url);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

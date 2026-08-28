@@ -1,6 +1,5 @@
 import type { TestInfo } from '@playwright/test';
 
-import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
 import { SafariAddressBar, URLInputField } from '../../locators/browsers';
@@ -17,6 +16,7 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { checkOpenUrlDialogStrings } from '../../utils/open_url_dialog';
 import { assertUrlIsReachable, ensureHttpsURL } from '../../utils/utilities';
 
 bothPlatformsIt({
@@ -39,10 +39,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: 
   await device.onAndroid().scrollDown();
   await device.clickOnElementAll(new SessionNetworkMenuItem(device));
   await device.clickOnElementAll(new SessionNetworkLearnMoreStaking(device));
-  await device.checkModalStrings(
-    tStripped('urlOpen'),
-    tStripped('urlOpenDescription', { url: linkURL })
-  );
+  await checkOpenUrlDialogStrings(device, linkURL);
   await device.clickOnElementAll(new OpenLinkButton(device));
   if (platform === 'ios') {
     // Tap the Safari address bar to reveal the URL
