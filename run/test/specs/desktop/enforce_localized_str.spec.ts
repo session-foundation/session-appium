@@ -342,6 +342,28 @@ function getExpectedStringFromKey(
     // break, so the mobile locators pairing this copy with an element cannot compare it byte-for-byte.
     case 'proFullestPotential':
       return 'Want to use Session to its fullest potential? Upgrade to Session Pro Beta to get access to exclusive features and help support the project.';
+    // Both of these span a `<br/><br/>` around a bolded `Session Pro`, which `tStripped` collapses
+    // to a single space.
+    case 'proClearAllDataDevice':
+      return 'Are you sure you want to delete your data from this device? Session Pro cannot be transferred to another account. Please save your Recovery Password to ensure you can restore your Pro access later.';
+    case 'proClearAllDataNetwork':
+      return 'Are you sure you want to delete your data from the network? If you continue, you will not be able to restore your messages or contacts. Session Pro cannot be transferred to another account. Please save your Recovery Password to ensure you can restore your Pro access later.';
+    case 'clearDeviceAndNetworkConfirm':
+      return 'Are you sure you want to delete your data from the network? If you continue, you will not be able to restore your messages or contacts.';
+    case 'requestRefund':
+      return 'Request Refund';
+    case 'proRefundDescription':
+      return "We’re sorry to see you go. Here's what you need to know before requesting a refund.";
+    case 'proImportantDescription':
+      return 'Requesting a refund is final. If approved, your Pro access will be canceled immediately and you will lose access to all Pro features.';
+    case 'pro_provider_google_play_store':
+      return 'Google Play Store';
+    case 'pro_provider_app_store_store':
+      return 'Apple App Store';
+    case 'pro_provider_app_store_account':
+      return 'Apple account';
+    case 'pro_provider_app_store_platform':
+      return 'Apple';
     default:
       // returning null means we don't have an expected string yet for this key.
       // This will make the test fail

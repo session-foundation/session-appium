@@ -67,13 +67,16 @@ async function overProLimitMessage(platform: SupportedPlatformsType, testInfo: T
 
   await test.step('Wait for it to arrive', async () => {
     await device.clickOnElementAll(new ConversationItem(device, bob.userName));
+    device.log(`Waiting up to ${MESSAGE_DELIVERY_TIMEOUT_MS}ms for "${early(TAG)}" to arrive`);
     await device.waitForMessageContaining(early(TAG), MESSAGE_DELIVERY_TIMEOUT_MS);
     // Mandatory before reading any later marker: a collapsed bubble is indistinguishable from a
     // truncated one, so without this every absence below is satisfied by a message that is merely folded.
     await device.expandLongMessages();
+    device.log('Expanded any folded bubble — every marker below reads the stored body');
   });
 
   await test.step('The recipient cuts the body at exactly the Pro limit', async () => {
+    device.log(`Looking for "${late(TAG)}", past the standard limit of ${STANDARD_MAX_CHARS}`);
     if (!(await device.findMessageContaining(late(TAG)))) {
       throw new Error(
         `${alice.userName}'s copy stops inside the standard limit of ${STANDARD_MAX_CHARS}, ` +
@@ -82,6 +85,7 @@ async function overProLimitMessage(platform: SupportedPlatformsType, testInfo: T
           `was parsed.`
       );
     }
+    device.log(`Looking for "${boundary(TAG)}", which ends on ${PRO_MAX_CHARS}`);
     if (!(await device.findMessageContaining(boundary(TAG)))) {
       throw new Error(
         `${alice.userName}'s copy is missing the marker ending at ${PRO_MAX_CHARS}, so this ` +
@@ -91,6 +95,7 @@ async function overProLimitMessage(platform: SupportedPlatformsType, testInfo: T
     // The pair above and this one are what pin the length: `boundary` ends at PRO_MAX_CHARS and
     // `overflow` is `boundary` plus the one character past it, so only a body of exactly PRO_MAX_CHARS
     // satisfies both.
+    device.log(`Making sure "${overflow(TAG)}" is absent, the character past ${PRO_MAX_CHARS}`);
     if (await device.findMessageContaining(overflow(TAG))) {
       throw new Error(
         `${alice.userName} kept the character past ${PRO_MAX_CHARS}, so this client stored ` +
@@ -99,6 +104,5 @@ async function overProLimitMessage(platform: SupportedPlatformsType, testInfo: T
       );
     }
   });
-
   await closeApp(device);
 }
