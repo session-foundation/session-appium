@@ -67,6 +67,29 @@ function getExpectedStringFromKey(
     }
   }
   switch (args.key) {
+    // Pro tokens. Every `tStripped` token a spec uses needs an entry here, or this test reports it as an
+    // unknown key — the registry is what turns an upstream copy change into a failure rather than a silent
+    // difference in what a spec asserts.
+    case 'proClearAllDataDevice':
+      return 'Are you sure you want to delete your data from this device? Session Pro cannot be transferred to another account. Please save your Recovery Password to ensure you can restore your Pro access later.';
+    case 'proClearAllDataNetwork':
+      return 'Are you sure you want to delete your data from the network? If you continue, you will not be able to restore your messages or contacts. Session Pro cannot be transferred to another account. Please save your Recovery Password to ensure you can restore your Pro access later.';
+    case 'clearDeviceAndNetworkConfirm':
+      return 'Are you sure you want to delete your data from the network? If you continue, you will not be able to restore your messages or contacts.';
+    case 'proRefundDescription':
+      return "We\u2019re sorry to see you go. Here's what you need to know before requesting a refund.";
+    case 'proImportantDescription':
+      return 'Requesting a refund is final. If approved, your Pro access will be canceled immediately and you will lose access to all Pro features.';
+    case 'requestRefund':
+      return 'Request Refund';
+    case 'pro_provider_google_play_store':
+      return 'Google Play Store';
+    case 'pro_provider_app_store_store':
+      return 'Apple App Store';
+    case 'pro_provider_app_store_account':
+      return 'Apple account';
+    case 'pro_provider_app_store_platform':
+      return 'Apple';
     case 'accept':
       return 'Accept';
     case 'sessionClearData':
