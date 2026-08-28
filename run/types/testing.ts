@@ -230,8 +230,13 @@ export type AccessibilityId =
   | 'Cancel'
   | 'character-limit-text'
   | 'Classic Light'
+  | 'clear-data-confirm-button'
+  | 'clear-data-description'
+  | 'clear-device-and-network-radio'
+  | 'clear-device-only-radio'
   | 'Clear'
   | 'Clear all'
+  | 'Clear data'
   | 'Close'
   | 'Close button'
   | 'Collections'
@@ -505,7 +510,8 @@ export type AccessibilityId =
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
   | `cta-feature-${number}`
-  | `Disappear after ${DisappearActions} option`;
+  | `Disappear after ${DisappearActions} option`
+  | `Pinned icon: ${string}`;
 
 export type Id =
   | DISAPPEARING_TIMES
@@ -524,9 +530,16 @@ export type Id =
   | 'block-user-menu-option'
   | 'Block'
   | 'Call'
+  | 'Cancel'
+  | 'clear-data-confirm-button'
+  | 'clear-data-description'
+  | 'clear-device-and-network-radio'
+  | 'clear-device-only-radio'
   | 'clear-input-button-description'
   | 'clear-input-button-name'
   | 'clear-input-button'
+  | 'Clear'
+  | 'Clear data'
   | 'Close button'
   | 'com.android.chrome:id/negative_button'
   | 'com.android.chrome:id/signin_fre_dismiss_button'

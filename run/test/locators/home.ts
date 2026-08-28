@@ -61,12 +61,20 @@ export class ConversationPinnedIcon extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
+        // Legacy xpath: the Android icon carries no content description, so it can only be reached
+        // through the row's hierarchy. See `iconPinned` in `view_conversation.xml`.
         return {
           strategy: 'xpath',
           selector: `//android.view.ViewGroup[android.widget.TextView[@content-desc='Conversation list item' and @text='${this.name}']]/android.widget.ImageView[@resource-id='network.loki.messenger:id/iconPinned']`,
         } as const;
       case 'ios':
-        throw new Error('ConversationPinnedIcon: iOS not yet implemented');
+        // The marker is identical in every row, so the conversation name is what tells them apart, and
+        // `FullConversationCell` puts it in the IDENTIFIER rather than the label - a label would be read
+        // aloud right after the screen reader has already announced the same name from the cell.
+        return {
+          strategy: 'accessibility id',
+          selector: `Pinned icon: ${this.name}`,
+        } as const;
     }
   }
 }

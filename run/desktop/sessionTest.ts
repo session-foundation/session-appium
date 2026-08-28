@@ -1,4 +1,4 @@
-import type { StateUser, UserNameType } from '@session-foundation/qa-seeder';
+import type { NetworkArg, StateUser, UserNameType } from '@session-foundation/qa-seeder';
 
 /* eslint-disable no-empty-pattern */
 // Desktop test-declaration helpers. Adapted from session-playwright
@@ -412,6 +412,45 @@ function sessionTestSeededFriends(
 }
 
 /**
+ * Alice with a window, and Bob seeded as a mutual contact with no window at all.
+ *
+ * For a test whose other party is the SEEDER rather than a client. Bob's `StateUser` is handed over
+ * seed and all, so the seeder can act as him; opening a window for him would cost a window and prove
+ * nothing.
+ *
+ * The 1:1 is opened on Alice's window, because `message-content` only exists inside an open
+ * conversation — `focusSeededFriendConvos` cannot do it here, since it needs a window each side.
+ */
+function sessionTestSeededFriendNoWindow(
+  testName: string,
+  { context }: { context?: TestContext },
+  testCallback: (
+    details: { alice: DesktopWrapper; bob: StateUser; network: NetworkArg },
+    testInfo: TestInfo
+  ) => Promise<void>
+): void {
+  return seededTest(
+    testName,
+    async (pages, testInfo) => {
+      const opened = await openSeededWindows({
+        stateKey: '2friends',
+        groupName: undefined,
+        windowsPerUser: [1, 0],
+        context,
+      });
+      pages.push(...opened.pages);
+
+      const alice = opened.users[0].windows[0];
+      const bob = opened.users[1].account;
+      await alice.openConversationWith(bob.userName);
+
+      await testCallback({ alice, bob, network: opened.network }, testInfo);
+    },
+    context
+  );
+}
+
+/**
  * One user with `contactsCount` seeded contacts, and a window for that user only.
  *
  * The other accounts exist on the swarm so their conversations appear in the first user's list, but
@@ -468,6 +507,12 @@ function sessionTestSeededContacts(
  *
  * The callback gets the seeded account as well as the window, because the point of this state is to
  * grant Pro to that same account on the backend before the client ever looks.
+ *
+ * The expiry is an OPTION on the plain one-user state rather than a state key of its own, because
+ * Pro-ness belongs to a user and not to the shape of the account graph — a key can only ever say "the
+ * single user in a one-user state", and folding it into the key set doubles that set for every
+ * combination someone wants next. Empty per-user terms are the seeder's defaults: 30 days out and
+ * auto-renewing, which is exactly what the retired `1userWithProAccess` key granted.
  */
 function sessionTestSeededProAccess(
   testName: string,
@@ -481,10 +526,13 @@ function sessionTestSeededProAccess(
     testName,
     async (pages, testInfo) => {
       const opened = await openSeededWindows({
-        stateKey: '1userWithProAccess',
+        stateKey: '1user',
         groupName: undefined,
         windowsPerUser: [1],
         context,
+        // Was its own state key until qa-seeder 0.4, which made Pro an option that composes with any
+        // state rather than a key of its own.
+        stateOptions: { pro: { 0: {} } },
       });
       pages.push(...opened.pages);
       await testCallback(
@@ -618,6 +666,21 @@ export function test_Alice_1W_Bob_1W_friends(
     ({ users }, info) =>
       testCallback({ alice: users[0].windows[0], bob: users[1].windows[0] }, info)
   );
+}
+
+/**
+ * As `test_Alice_1W_Bob_1W_friends`, but Bob gets no window — the callback gets his seeded account
+ * instead, for a test whose other party is the seeder. The 1:1 is already open on Alice's window.
+ */
+export function test_Alice_1W_Bob_0W_friends(
+  testName: string,
+  testCallback: (
+    details: { alice: DesktopWrapper; bob: StateUser; network: NetworkArg },
+    testInfo: TestInfo
+  ) => Promise<void>,
+  context?: TestContext
+) {
+  return sessionTestSeededFriendNoWindow(testName, { context }, testCallback);
 }
 
 /** As `test_Alice_1W_Bob_1W_friends`, with a second (linked) window for Alice. */

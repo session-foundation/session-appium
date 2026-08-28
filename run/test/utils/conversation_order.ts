@@ -1,5 +1,4 @@
 import { DeviceWrapper } from '../../types/DeviceWrapper';
-import { verify } from './';
 
 // Returns the names of all conversation list items in their current DOM order
 export const getConversationOrder = async (device: DeviceWrapper): Promise<string[]> => {
@@ -7,29 +6,4 @@ export const getConversationOrder = async (device: DeviceWrapper): Promise<strin
   return Promise.all(items.map(item => device.getTextFromElement(item)));
 };
 
-// Asserts pinned conversations float to the top maintaining relative order, followed by unpinned in their original order.
-// Pass an empty pinnedNames array to assert the order is fully restored (e.g. after unpinning).
-//
-// 🔴 The expectation is built by partitioning `beforeOrder`, so pinning a PREFIX of it expects
-// `beforeOrder` back unchanged — and the assertion cannot fail, whether or not anything was pinned.
-// Seeded contacts arrive in positional order and the list renders in that order, so
-// `contactNames.slice(0, n)` is exactly that case. Choose a set that is not a prefix.
-export const assertPinOrder = (
-  beforeOrder: string[],
-  pinnedNames: string[],
-  afterOrder: string[]
-) => {
-  const pinnedSet = new Set(pinnedNames);
-  const pinnedExpected: string[] = [];
-  const unpinnedExpected: string[] = [];
-  for (const name of beforeOrder) {
-    if (pinnedSet.has(name)) {
-      pinnedExpected.push(name);
-    } else {
-      unpinnedExpected.push(name);
-    }
-  }
-  const expected = [...pinnedExpected, ...unpinnedExpected];
-
-  verify(afterOrder, 'Conversation order is not correct').toEqual(expected);
-};
+export { assertPinOrder } from '../../shared/conversation_order';

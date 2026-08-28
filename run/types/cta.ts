@@ -6,6 +6,7 @@ export type CTAType =
   | 'donate'
   | 'longerMessages'
   | 'pinnedConversations'
+  | 'pinnedConversationsOverLimit'
   | 'proExpired'
   | 'proExpiringSoon';
 
@@ -20,6 +21,13 @@ export type CTAConfig = {
   positiveButton?: string;
   features?: string[];
 };
+
+/** Shared by both pinned-conversation CTAs, which differ only in their body. */
+const PIN_CTA_FEATURES = [
+  tStripped('proFeatureListPinnedConversations'),
+  tStripped('proFeatureListLongerMessages'),
+  tStripped('proFeatureListLoadsMore'),
+];
 
 export const ctaConfigs: Record<CTAType, CTAConfig> = {
   donate: {
@@ -82,10 +90,21 @@ export const ctaConfigs: Record<CTAType, CTAConfig> = {
     body: tStripped('proCallToActionPinnedConversationsMoreThan', { limit: '5' }),
     negativeButton: tStripped('cancel'),
     positiveButton: tStripped('theContinue'),
-    features: [
-      tStripped('proFeatureListPinnedConversations'),
-      tStripped('proFeatureListLongerMessages'),
-      tStripped('proFeatureListLoadsMore'),
-    ],
+    features: PIN_CTA_FEATURES,
+  },
+  /**
+   * The same CTA raised by an account ALREADY holding more pins than the limit, which only a seeded
+   * config can produce.
+   *
+   * A different token, not an oversight: the clients branch on it deliberately, and telling someone
+   * holding six pins "want more than 5 pins?" would read as nonsense. Android picks between the two in
+   * `ProComponents.kt`, crossed with whether the plan has expired.
+   */
+  pinnedConversationsOverLimit: {
+    heading: tStripped('upgradeTo'),
+    body: tStripped('proCallToActionPinnedConversations'),
+    negativeButton: tStripped('cancel'),
+    positiveButton: tStripped('theContinue'),
+    features: PIN_CTA_FEATURES,
   },
 };

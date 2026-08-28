@@ -17,6 +17,8 @@ import type { Page } from '@playwright/test';
 
 import {
   buildStateForTest,
+  type BuildStateOptions,
+  type NetworkArg,
   type PrebuiltStateKey,
   type StateGroup,
   type StateUser,
@@ -48,6 +50,11 @@ export type SeededUser = {
  *
  * `extraWindows` are opened but left untouched at the onboarding screen — for the rare test that
  * needs an account the seeder cannot express (a 4th user, an externally-owned seed).
+ *
+ * `stateOptions` is the seeder's per-user knobs (Pro access, pinned conversations), addressed by a
+ * user's index in the state's user list. They compose with every state key rather than each
+ * combination needing a key of its own, which is why they are threaded through here instead of being
+ * chosen by `stateKey`.
  */
 export async function openSeededWindows<K extends PrebuiltStateKey>({
   stateKey,
@@ -55,12 +62,15 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
   windowsPerUser,
   extraWindows = 0,
   context,
+  stateOptions,
 }: {
   stateKey: K;
   groupName: K extends WithGroupStateKey ? string : undefined;
   windowsPerUser: number[];
   extraWindows?: number;
   context?: TestContext;
+  /// Seeded Pro access and pins, addressed by index into the state's user list.
+  stateOptions?: BuildStateOptions;
 }): Promise<{
   users: SeededUser[];
   /** Windows with no account on them, in the order requested. */
@@ -68,6 +78,12 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
   /** Every window opened, for the caller's `forceCloseAllWindows` teardown. */
   pages: Page[];
   group?: StateGroup;
+  /**
+   * The network the state was seeded onto. Returned because a test that seeds something ITSELF — a
+   * message the seeder sends on behalf of an account with no window — must use the same one, and
+   * resolving it a second time would re-probe the devnet.
+   */
+  network: NetworkArg;
 }> {
   // Resolved before anything is opened or seeded: on a mismatch (or an unusable devnet) the seeder
   // would otherwise write the accounts onto one network while the app polls another, and the test
@@ -83,7 +99,7 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
     openApps(totalWindows, context).then(apps =>
       Promise.all(apps.map(app => waitFirstWindow(app)))
     ),
-    buildStateForTest(stateKey, groupName, network),
+    buildStateForTest(stateKey, groupName, network, stateOptions),
   ]);
 
   const seedUsers = (prebuilt as { users: StateUser[] }).users;
@@ -135,5 +151,5 @@ export async function openSeededWindows<K extends PrebuiltStateKey>({
 
   const group = 'group' in prebuilt ? prebuilt.group : undefined;
 
-  return { users, extras, pages, group };
+  return { users, extras, pages, group, network };
 }
