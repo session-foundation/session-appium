@@ -406,6 +406,7 @@ export type AccessibilityId =
   | 'Pin Conversation'
   | 'Please enter a shorter group name'
   | 'pro-badge-icon'
+  | 'pro-badge-text'
   | 'pro-menu-item-title'
   | 'pro-menu-item'
   | 'pro-message-feature-badges'
