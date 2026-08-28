@@ -47,6 +47,23 @@ export async function breakTheRun(
   );
 }
 
+/**
+ * How long each status is allowed to take, because they are not the same kind of wait.
+ *
+ * `sent` and `failed` are local transitions — the client decides them, so a slow one is a real problem and
+ * a tight bound reports it quickly. `read` needs a receipt to reach the recipient, be acted on, and travel
+ * back, so it is bounded by the network rather than by this client.
+ *
+ * Measured: a `read` receipt on devnet took 31s, against a shared 20s ceiling whose comment
+ * ("a gif on mainnet can take a long time to upload") was written for attachment uploads and never
+ * revisited for receipts. That is why `Read status` failed while asserting behaviour that works.
+ */
+const STATUS_TIMEOUT_MS: Record<MessageStatus, number> = {
+  failed: 20_000,
+  sent: 20_000,
+  read: 60_000,
+};
+
 export const waitForMessageStatus = async (
   window: Page,
   message: string,
@@ -63,7 +80,7 @@ export const waitForMessageStatus = async (
   const logSig = `${status} status of message '${message}'`;
 
   const messageStatus = await window.waitForSelector(selector, {
-    timeout: 20_000, // a gif on mainnet can take a long time to upload
+    timeout: STATUS_TIMEOUT_MS[status],
   });
   console.info(`${logSig} is ${!!messageStatus}`);
 };
