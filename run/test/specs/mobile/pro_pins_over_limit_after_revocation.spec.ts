@@ -6,7 +6,6 @@ import { makeAccountPro, revokeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { MessageInput, MessageLengthCountdown } from '../../locators/conversation';
-import { CTAButtonNegative } from '../../locators/global';
 import { ConversationItem } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
@@ -135,7 +134,11 @@ async function pinsOverLimitAfterRevocation(platform: SupportedPlatformsType, te
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Pinned Conversations CTA'), async () => {
     await device.pinConversation(overLimit);
     await device.checkCTA('pinnedConversationsRenew');
-    await device.clickOnElementAll(new CTAButtonNegative(device));
+    // Dismissed through `dismissCTA` rather than clicking the button directly: the click returns before
+    // the modal closes, and the next step reads the conversation list behind it. Measured on Android —
+    // the renew CTA was still on screen when the order assertion ran, and the failure named the plus
+    // button rather than the modal.
+    await device.dismissCTA('negativeButton');
   });
 
   await test.step('Assert the extra conversation was NOT pinned', async () => {

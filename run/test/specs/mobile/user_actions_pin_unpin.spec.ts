@@ -7,7 +7,6 @@ const OVER_STANDARD_PIN_LIMIT = STANDARD_PIN_LIMIT + 1;
 import { makeAccountPro } from '../../../shared/pro_grant';
 import { TestSteps } from '../../../types/allure';
 import { bothPlatformsIt } from '../../../types/sessionIt';
-import { CTAButtonNegative } from '../../locators/global';
 import { ConversationPinnedIcon } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
@@ -136,7 +135,7 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Pinned Conversations CTA'), async () => {
     await device.pinConversation(overLimit);
     await device.checkCTA('pinnedConversations');
-    await device.clickOnElementAll(new CTAButtonNegative(device));
+    await device.dismissCTA('negativeButton');
   });
   await test.step('Assert the over-limit conversation was NOT pinned', async () => {
     // The CTA appearing is not the same as the pin being refused: an app that showed the CTA and
@@ -152,7 +151,7 @@ async function nonProPinnedLimit(platform: SupportedPlatformsType, testInfo: Tes
     // allowed and no CTA is raised, so the limit stops applying rather than applying wrongly. Repeatable
     // by anyone who reopens the app, which is why it is asserted here rather than left to the fix.
     await device.checkCTA('pinnedConversations');
-    await device.clickOnElementAll(new CTAButtonNegative(device));
+    await device.dismissCTA('negativeButton');
     assertPinOrder(beforeOrder, toPin, await getConversationOrder(device));
   });
 

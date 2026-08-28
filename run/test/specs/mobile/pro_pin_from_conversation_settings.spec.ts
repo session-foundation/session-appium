@@ -5,7 +5,6 @@ import { TestSteps } from '../../../types/allure';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { ConversationSettings, PinConversationSettingsOption } from '../../locators/conversation';
-import { CTAButtonNegative } from '../../locators/global';
 import { ConversationItem, PlusButton } from '../../locators/home';
 import { open_Alice1_with_contacts } from '../../state_builder';
 import { assertPinOrder, getConversationOrder } from '../../utils/conversation_order';
@@ -89,7 +88,7 @@ async function pinLimitFromConversationSettings(
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Pinned Conversations CTA'), async () => {
     await pinFromConversationSettings(device, overLimit);
     await device.checkCTA('pinnedConversations');
-    await device.clickOnElementAll(new CTAButtonNegative(device));
+    await device.dismissCTA('negativeButton');
   });
 
   await test.step('Assert the over-limit conversation was NOT pinned', async () => {
