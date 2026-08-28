@@ -2,7 +2,7 @@
 // The reader of the list is platform-specific (`getConversationOrder` in each suite); only the
 // expectation is shared.
 
-import { expect } from '@playwright/test';
+import { verify } from './verify';
 
 // Asserts pinned conversations float to the top keeping their relative order, followed by the
 // unpinned ones in their original order. Pass an empty `pinnedNames` to assert the order is fully
@@ -33,5 +33,5 @@ export function assertPinOrder(
   }
   const expected = [...pinnedExpected, ...unpinnedExpected];
 
-  expect(afterOrder, 'Conversation order is not correct').toEqual(expected);
+  verify(afterOrder, 'Conversation order is not correct').toEqual(expected);
 }
