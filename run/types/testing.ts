@@ -402,7 +402,6 @@ export type AccessibilityId =
   | 'pin-conversation-menu-option'
   | 'Pin'
   | 'Pin Conversation'
-  | `Pinned icon: ${string}`
   | 'Please enter a shorter group name'
   | 'pro-badge-icon'
   | 'pro-menu-item-title'
@@ -511,7 +510,8 @@ export type AccessibilityId =
   | `${DISAPPEARING_TIMES} - Radio`
   | `${GROUPNAME}`
   | `cta-feature-${number}`
-  | `Disappear after ${DisappearActions} option`;
+  | `Disappear after ${DisappearActions} option`
+  | `Pinned icon: ${string}`;
 
 export type Id =
   | DISAPPEARING_TIMES

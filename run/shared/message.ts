@@ -12,7 +12,7 @@ import { COUNTDOWN_START_THRESHOLD, PRO_MAX_CHARS, STANDARD_MAX_CHARS } from './
 export const OVER_STANDARD_CHARS = 3000;
 
 /** The largest length the composer accepts without sitting on the boundary. */
-export const MARKED_MESSAGE_LENGTH = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
+const MARKED_MESSAGE_LENGTH = PRO_MAX_CHARS - COUNTDOWN_START_THRESHOLD;
 
 /** Where the `LATE` marker sits, quoted when a spec reports a limit that was wrongly honoured. */
 export const LATE_AT = STANDARD_MAX_CHARS + 500;
@@ -42,39 +42,87 @@ export function overStandardLengthMessage(tag?: string): string {
   return tag ? `${tag} ${body.slice(tag.length + 1)}` : body;
 }
 
-/**
- * A Pro-length message carrying two markers, placed so each end's copy is identified by which survives.
- *
- * `EARLY` sits inside the standard limit, so it is present in every outcome — including a copy that
- * arrived truncated. It is the anchor: without it, "the tail is missing" is equally well explained by the
- * message never arriving, and the assertion would pass before the behaviour under test happened.
- *
- * `LATE` sits past the standard limit and inside the Pro one, so it survives only if the recipient
- * honoured the proof.
- *
- * The positions are checked rather than trusted, because getting them wrong fails in the flattering
- * direction: a message that never contained its `EARLY` marker fails as a long wait on the recipient,
- * which reads as a delivery problem.
- */
-export function markedMessage(tag: string): string {
-  const head = 'a'.repeat(EARLY_AT) + early(tag);
-  const withLate = head + 'b'.repeat(LATE_AT - head.length) + late(tag);
-  const message = withLate + 'c'.repeat(MARKED_MESSAGE_LENGTH - withLate.length);
+/** A marker and the index its first character must land on. */
+type Marker = { text: string; startsAt: number };
 
-  const earlyEnd = message.indexOf(early(tag)) + early(tag).length;
-  const lateStart = message.indexOf(late(tag));
-  if (
-    message.length !== MARKED_MESSAGE_LENGTH ||
-    earlyEnd > STANDARD_MAX_CHARS ||
-    lateStart <= STANDARD_MAX_CHARS
-  ) {
+/** Distinct per region, so a page-source dump says which stretch of the body you are looking at. */
+const REGION_FILL = 'abcdefghijklmnopqrstuvwxyz';
+
+/**
+ * A body of exactly `length` characters with each marker starting at the index asked for.
+ *
+ * The placement is **proved, not trusted**, because getting it wrong fails in the flattering
+ * direction: a marker that was never planted reads as a recipient that dropped it, so the spec would
+ * report a client bug that is really an arithmetic slip here.
+ */
+function bodyWithMarkers(what: string, length: number, markers: Array<Marker>): string {
+  const ordered = [...markers].sort((a, b) => a.startsAt - b.startsAt);
+
+  let body = '';
+  ordered.forEach(({ text, startsAt }, region) => {
+    if (startsAt < body.length) {
+      throw new Error(
+        `${what}: "${text}" starts at ${startsAt}, inside the marker before it which ends at ${body.length}.`
+      );
+    }
+    body += REGION_FILL[region % REGION_FILL.length].repeat(startsAt - body.length) + text;
+  });
+
+  if (body.length > length) {
     throw new Error(
-      `markedMessage(${tag}): ${message.length} chars, EARLY ends ${earlyEnd}, LATE starts ${lateStart} ` +
-        `— the markers must straddle the standard limit of ${STANDARD_MAX_CHARS}.`
+      `${what}: the markers reach ${body.length} characters, past the ${length} asked for.`
+    );
+  }
+  body += REGION_FILL[ordered.length % REGION_FILL.length].repeat(length - body.length);
+
+  if (body.length !== length) {
+    throw new Error(`${what}: built ${body.length} characters, wanted ${length}.`);
+  }
+  for (const { text, startsAt } of ordered) {
+    const at = body.indexOf(text);
+    if (at !== startsAt) {
+      throw new Error(`${what}: "${text}" landed at ${at}, wanted ${startsAt}.`);
+    }
+    if (body.lastIndexOf(text) !== at) {
+      throw new Error(
+        `${what}: "${text}" appears more than once, so a probe for it cannot say where the copy was cut.`
+      );
+    }
+  }
+
+  return body;
+}
+
+/**
+ * The pair both bodies open with, and the reason they are a pair.
+ *
+ * `EARLY` ends inside the standard limit, so it survives every outcome including a truncated copy. It
+ * is the anchor: without it, "the tail is missing" is equally well explained by the message never
+ * arriving, and the assertion would pass before the behaviour under test happened. `LATE` starts past
+ * the standard limit and inside the Pro one, so it survives only if the recipient honoured the proof.
+ *
+ * Checked rather than assumed because both offsets grow with the tag.
+ */
+function straddlingMarkers(what: string, tag: string): Array<Marker> {
+  const earlyEnd = EARLY_AT + early(tag).length;
+  if (earlyEnd > STANDARD_MAX_CHARS || LATE_AT <= STANDARD_MAX_CHARS) {
+    throw new Error(
+      `${what}: EARLY ends ${earlyEnd} and LATE starts ${LATE_AT} \u2014 they must straddle the standard ` +
+        `limit of ${STANDARD_MAX_CHARS}.`
     );
   }
 
-  return message;
+  return [
+    { text: early(tag), startsAt: EARLY_AT },
+    { text: late(tag), startsAt: LATE_AT },
+  ];
+}
+
+/** A Pro-length body whose two markers say which limit the recipient applied. */
+export function markedMessage(tag: string): string {
+  const what = `markedMessage(${tag})`;
+
+  return bodyWithMarkers(what, MARKED_MESSAGE_LENGTH, straddlingMarkers(what, tag));
 }
 
 /**
@@ -83,45 +131,29 @@ export function markedMessage(tag: string): string {
  *
  * Four probes, and each rules out one outcome:
  *   - `early` ends inside the standard limit, so it is present in every copy that arrived at all.
- *   - `late` starts past it, so its absence is a copy cut at the standard limit — a proof that did not
+ *   - `late` starts past it, so its absence is a copy cut at the standard limit \u2014 a proof that did not
  *     verify.
  *   - `boundary` ENDS at exactly `PRO_MAX_CHARS`, so its absence is a copy cut short of the Pro limit.
  *   - `overflow` is `boundary` plus the 10,001st character, so its presence is a copy that was not cut.
  *
- * `boundary` present and `overflow` absent means the body ends at exactly `PRO_MAX_CHARS` — there is
+ * `boundary` present and `overflow` absent means the body ends at exactly `PRO_MAX_CHARS` \u2014 there is
  * one character between the two outcomes, which no marker can straddle and only this pair can pin.
  *
  * Substring probes rather than a length read because the length is not readable on either platform: a
  * desktop bubble carries its "Read more" label inside the same element as the text, and a mobile
  * bubble's accessibility value is the platform's rendering of the body rather than the body.
  *
- * **Plain ASCII, deliberately.** All three clients truncate by CODE POINT — except iOS, which counts
- * UTF-16 units, so a non-BMP body lands at 10,000 on Android/Desktop and 5,000 on iOS. ASCII is where
- * the three agree, so one expectation holds everywhere; a spec that wants that divergence must ask for
- * it explicitly and expect different numbers per platform.
+ * **Plain ASCII, deliberately.** All three clients truncate by code point, but only since session-ios
+ * #768 \u2014 before it iOS counted UTF-16 units, so a non-BMP body landed at 10,000 on Android/Desktop and
+ * 5,000 on iOS. A spec that wants the non-BMP case should say so explicitly rather than inherit it.
  */
 export function overProLimitMessage(tag: string): string {
-  const head = 'a'.repeat(EARLY_AT) + early(tag);
-  const withLate = head + 'b'.repeat(LATE_AT - head.length) + late(tag);
-  const filled = withLate + 'c'.repeat(PRO_MAX_CHARS - boundary(tag).length - withLate.length);
-  const message = filled + overflow(tag);
+  const what = `overProLimitMessage(${tag})`;
 
-  const earlyEnd = message.indexOf(early(tag)) + early(tag).length;
-  const lateStart = message.indexOf(late(tag));
-  const boundaryEnd = message.indexOf(boundary(tag)) + boundary(tag).length;
-  if (
-    message.length !== OVER_PRO_LIMIT_CHARS ||
-    earlyEnd > STANDARD_MAX_CHARS ||
-    lateStart <= STANDARD_MAX_CHARS ||
-    boundaryEnd !== PRO_MAX_CHARS
-  ) {
-    throw new Error(
-      `overProLimitMessage(${tag}): ${message.length} chars, EARLY ends ${earlyEnd}, LATE starts ` +
-        `${lateStart}, BOUNDARY ends ${boundaryEnd} — it must be ${OVER_PRO_LIMIT_CHARS} long, the ` +
-        `first two markers must straddle ${STANDARD_MAX_CHARS}, and BOUNDARY must end at exactly ` +
-        `${PRO_MAX_CHARS}.`
-    );
-  }
-
-  return message;
+  return bodyWithMarkers(what, OVER_PRO_LIMIT_CHARS, [
+    ...straddlingMarkers(what, tag),
+    // Planting `overflow` rather than `boundary` puts `boundary`'s last character on PRO_MAX_CHARS and
+    // the surplus one immediately after it, which is the whole measurement.
+    { text: overflow(tag), startsAt: PRO_MAX_CHARS - boundary(tag).length },
+  ]);
 }
