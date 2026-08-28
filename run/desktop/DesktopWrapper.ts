@@ -1114,10 +1114,9 @@ export class DesktopWrapper implements IBaseDeviceWrapper {
   /** Returns immediately if the loader never shows — see the helper for why that is a pass. */
   public async waitForLoadingAnimationToFinish(
     loader: DataTestId,
-    appearWithinMs?: number,
-    finishWithinMs?: number
+    options?: { appearWithinMs?: number; finishWithinMs?: number; windowMayClose?: boolean }
   ): Promise<void> {
-    await waitForLoadingAnimationToFinish(this.page, loader, appearWithinMs, finishWithinMs);
+    await waitForLoadingAnimationToFinish(this.page, loader, options);
   }
 
   public async clickOnTextMessage(
