@@ -2602,6 +2602,22 @@ export class DeviceWrapper implements IMobileWrapper {
     // let some time for swipe action to happen and UI to update
   }
 
+  /** Whether a soft keyboard is currently on screen. */
+  public async isKeyboardShown(): Promise<boolean> {
+    if (this.isIOS()) {
+      return (
+        (await this.doesElementExist({
+          strategy: 'class name',
+          selector: 'XCUIElementTypeKeyboard',
+          maxWait: 500,
+        })) !== null
+      );
+    }
+    return this.toShared()
+      .isKeyboardShown()
+      .catch(() => false);
+  }
+
   /**
    * Dismisses the soft keyboard if one is up, so a control it was covering becomes tappable.
    *
@@ -2611,14 +2627,33 @@ export class DeviceWrapper implements IMobileWrapper {
    * throws nothing) while the tap lands outside its clickable region. That failure is silent: no
    * error, no navigation, nothing in the device log.
    *
-   * Best-effort by design. Both drivers throw if asked to hide a keyboard that isn't showing, and
-   * "there was no keyboard to dismiss" is the desired end state rather than a failure.
+   * **`mobile: hideKeyboard` is not enough on iOS.** It throws for two different reasons — there was no
+   * keyboard, and there is one the driver has no affordance to dismiss (a plain text field offers it no
+   * Done key) — and treating both as success means a keyboard that is still up reports as dismissed.
+   * So the outcome is checked rather than assumed, and a tap outside the input is the fallback: that is
+   * what dismisses this one, and it is inert on a screen with nothing under it.
    */
   public async hideKeyboard(): Promise<void> {
+    if (!(await this.isKeyboardShown())) {
+      return;
+    }
+
     try {
       await this.toShared().execute('mobile: hideKeyboard', {});
     } catch {
-      this.info('No keyboard to dismiss');
+      this.info('The driver could not dismiss the keyboard; tapping outside the input instead');
+    }
+
+    if (!(await this.isKeyboardShown())) {
+      return;
+    }
+
+    // Above any keyboard and below any header, so the tap lands on content rather than a control.
+    const { height, width } = await this.getWindowRect();
+    await this.clickOnCoordinates(Math.round(width / 2), Math.round(height * 0.35));
+
+    if (await this.isKeyboardShown()) {
+      this.info('Keyboard is still showing after both attempts to dismiss it');
     }
   }
 

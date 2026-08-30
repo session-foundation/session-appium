@@ -189,6 +189,14 @@ export async function verifyPageScreenshot(
     throw new Error(`SSIM threshold must be between 0 and 1, got: ${threshold}`);
   }
   await setConsistentStatusBar(device);
+  // Dismissed for the same reason the status bar is pinned: it is chrome the OS owns, not state the app
+  // decides, so it moves under a baseline without the app changing. Its layout differs between iOS
+  // runtimes — one extra key shifts every row below it — and no screenshot spec here is asserting
+  // anything about a keyboard.
+  //
+  // Best-effort: `hideKeyboard` treats "there was none" as the desired end state, so a screen without one
+  // is unaffected.
+  await device.hideKeyboard();
   try {
     // Get full page screenshot and crop it
     const pageScreenshotBase64 = await device.getScreenshot();
