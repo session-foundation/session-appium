@@ -2,8 +2,8 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
+import { OpenURLDialogConfirmButton } from '../../locators/global';
 import {
-  OpenLinkButton,
   SessionNetworkLearnMoreStaking,
   SessionNetworkMenuItem,
 } from '../../locators/network_page';
@@ -39,7 +39,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: 
   await device.clickOnElementAll(new SessionNetworkMenuItem(device));
   await device.clickOnElementAll(new SessionNetworkLearnMoreStaking(device));
   await checkOpenUrlDialogStrings(device, linkURL);
-  await device.clickOnElementAll(new OpenLinkButton(device));
+  await device.clickOnElementAll(new OpenURLDialogConfirmButton(device));
   const urlField = await getBrowserUrlField(device);
   const retrievedURL = await device.getTextFromElement(urlField);
   // Add https:// to the retrieved URL if the UI doesn't show it (Chrome doesn't, Safari does)

@@ -2,7 +2,7 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
-import { OpenLinkButton } from '../../locators/network_page';
+import { OpenURLDialogConfirmButton } from '../../locators/global';
 import { DonationsMenuItem, UserSettings } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
 import { getBrowserUrlField } from '../../utils/handle_first_open';
@@ -33,7 +33,7 @@ async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInf
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new DonationsMenuItem(device));
   await checkOpenUrlDialogStrings(device, linkURL);
-  await device.clickOnElementAll(new OpenLinkButton(device));
+  await device.clickOnElementAll(new OpenURLDialogConfirmButton(device));
   const urlField = await getBrowserUrlField(device);
   const actualUrlField = await device.getTextFromElement(urlField);
   const fullRetrievedURL = ensureHttpsURL(actualUrlField);

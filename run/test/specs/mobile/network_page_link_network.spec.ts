@@ -2,8 +2,8 @@ import type { TestInfo } from '@playwright/test';
 
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
+import { OpenURLDialogConfirmButton } from '../../locators/global';
 import {
-  OpenLinkButton,
   SessionNetworkLearnMoreNetwork,
   SessionNetworkMenuItem,
 } from '../../locators/network_page';
@@ -39,7 +39,7 @@ async function networkPageLearnMore(platform: SupportedPlatformsType, testInfo: 
   await device.clickOnElementAll(new SessionNetworkMenuItem(device));
   await device.clickOnElementAll(new SessionNetworkLearnMoreNetwork(device));
   await checkOpenUrlDialogStrings(device, linkURL);
-  await device.clickOnElementAll(new OpenLinkButton(device));
+  await device.clickOnElementAll(new OpenURLDialogConfirmButton(device));
   const urlField = await getBrowserUrlField(device);
   const actualUrlField = await device.getTextFromElement(urlField);
   const fullRetrievedURL = ensureHttpsURL(actualUrlField);
