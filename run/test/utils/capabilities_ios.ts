@@ -254,6 +254,25 @@ export function capabilityIsValid(
   return true;
 }
 
+/**
+ * Stop a session's capabilities depending on a WebDriverAgent that global setup started.
+ *
+ * `webDriverAgentUrl` makes the driver assume WDA is already answering, so a runner that dies after
+ * preparation turns every later session on that device into a hard failure — the driver never falls
+ * back, and the retry re-reads the same capabilities and fails identically. That is what the residual
+ * "failed to open the iOS app" failures are, and the prepared runner is exactly what makes them
+ * invisible: the fast path has no way to notice it stopped being available.
+ *
+ * Dropping the URL returns the session to the path it would have taken had preparation never run, which
+ * is slower and self-sufficient — it launches its own WDA.
+ */
+export function withoutPreparedWda(capabilities: W3CXCUITestDriverCaps): W3CXCUITestDriverCaps {
+  const next = structuredClone(capabilities);
+  delete next.alwaysMatch['appium:webDriverAgentUrl'];
+  Object.assign(next.alwaysMatch, wdaCapabilities);
+  return next;
+}
+
 export function getIosCapabilities(
   capabilitiesIndex: CapabilitiesIndexType,
   customCaps?: MobileTestContext

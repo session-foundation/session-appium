@@ -25,7 +25,12 @@ import {
   getAndroidPoolSize,
   getAndroidUdid,
 } from './capabilities_android';
-import { CapabilitiesIndexType, getIosCapabilities, iOSBundleId } from './capabilities_ios';
+import {
+  CapabilitiesIndexType,
+  getIosCapabilities,
+  iOSBundleId,
+  withoutPreparedWda,
+} from './capabilities_ios';
 import { registerDevicesForTest } from './device_registry';
 import { androidNeedsQaConfigRelaunch } from './devnet_android';
 import { contextForDevice, MobileTestContext, MobileTestContexts } from './pro_context';
@@ -325,13 +330,17 @@ const cleanPermissions = async (
   let wrappedDevice: DeviceWrapper | null = null;
   const maxRetries = 3;
   let retries = 0;
+  // Only the first attempt uses a WebDriverAgent that global setup started. If that attempt fails, the
+  // likeliest reason is that runner having died since — and retrying against the same URL fails the same
+  // way three times, which is what the residual "failed to open the iOS app" failures were.
+  let sessionCapabilities = capabilities;
 
   do {
     try {
       const device: XCUITestDriver = new XCUITestDriver(opts);
       wrappedDevice = new IosDeviceWrapper(device, udid, testInfo);
 
-      await wrappedDevice.createSession(capabilities);
+      await wrappedDevice.createSession(sessionCapabilities);
       // This function closes any pop up that hasn't been dismissed from a previous test (only happens for iOS currently)
       await wrappedDevice.modalPopup({
         strategy: 'xpath',
@@ -356,12 +365,24 @@ const cleanPermissions = async (
       }
       console.info('Create account button not found. Retrying...');
       retries++;
+      if (sessionCapabilities.alwaysMatch['appium:webDriverAgentUrl']) {
+        console.info(
+          'Retrying without the prepared WebDriverAgent; the driver will launch its own.'
+        );
+        sessionCapabilities = withoutPreparedWda(sessionCapabilities);
+      }
       await wrappedDevice.deleteSession().catch(() => {}); // Close the session before retrying; ignore cleanup failures
     } catch (error) {
       console.info('Error opening iOS app:', error);
       retries++;
       if (wrappedDevice) {
         await wrappedDevice.deleteSession().catch(() => {}); // Close the session in case of an error; ignore cleanup failures (e.g. session never created)
+      }
+      if (sessionCapabilities.alwaysMatch['appium:webDriverAgentUrl']) {
+        console.info(
+          'Retrying without the prepared WebDriverAgent; the driver will launch its own.'
+        );
+        sessionCapabilities = withoutPreparedWda(sessionCapabilities);
       }
     }
   } while (retries < maxRetries);
