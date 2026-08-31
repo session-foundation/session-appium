@@ -196,7 +196,7 @@ export async function verifyPageScreenshot(
   //
   // Best-effort: `hideKeyboard` treats "there was none" as the desired end state, so a screen without one
   // is unaffected.
-  await device.hideKeyboard();
+  await device.hideKeyboard({ tapOutsideTheInput: true });
   try {
     // Get full page screenshot and crop it
     const pageScreenshotBase64 = await device.getScreenshot();

@@ -2633,7 +2633,16 @@ export class DeviceWrapper implements IMobileWrapper {
    * So the outcome is checked rather than assumed, and a tap outside the input is the fallback: that is
    * what dismisses this one, and it is inert on a screen with nothing under it.
    */
-  public async hideKeyboard(): Promise<void> {
+  /**
+   * Best-effort. `mobile: hideKeyboard` throws both when there was no keyboard and when there is one the
+   * driver has no affordance to dismiss — a plain message input is the second — so the outcome is checked
+   * rather than taken from the call returning.
+   *
+   * `tapOutsideTheInput` adds a tap in the middle of the screen for the case the driver cannot handle.
+   * Only a caller that knows what occupies that point should ask for it: on a bottom sheet it is the
+   * sheet's own content, and a tap there can follow a link out of the app entirely.
+   */
+  public async hideKeyboard(options?: { tapOutsideTheInput?: boolean }): Promise<void> {
     if (!(await this.isKeyboardShown())) {
       return;
     }
@@ -2641,14 +2650,19 @@ export class DeviceWrapper implements IMobileWrapper {
     try {
       await this.toShared().execute('mobile: hideKeyboard', {});
     } catch {
-      this.info('The driver could not dismiss the keyboard; tapping outside the input instead');
+      this.info('The driver could not dismiss the keyboard');
     }
 
     if (!(await this.isKeyboardShown())) {
       return;
     }
 
-    // Above any keyboard and below any header, so the tap lands on content rather than a control.
+    if (!options?.tapOutsideTheInput) {
+      this.info('Keyboard is still showing and this caller did not ask for the tap fallback');
+      return;
+    }
+
+    // Above any keyboard and below any header.
     const { height, width } = await this.getWindowRect();
     await this.clickOnCoordinates(Math.round(width / 2), Math.round(height * 0.35));
 
