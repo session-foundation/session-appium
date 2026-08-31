@@ -3058,8 +3058,8 @@ export class DeviceWrapper implements IMobileWrapper {
     } as StrategyExtractionObj;
 
     // Locators
-    const elHeading = await this.findWithFallback(newHeading, legacyHeading);
-    const elDescription = await this.findWithFallback(newDescription, legacyDescription);
+    const elHeading = await this.findWithFallback(newHeading, legacyHeading, maxWait);
+    const elDescription = await this.findWithFallback(newDescription, legacyDescription, maxWait);
 
     // Actual text
     const actualHeading = await this.getTextFromElement(elHeading);
