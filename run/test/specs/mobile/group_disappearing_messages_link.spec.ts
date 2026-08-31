@@ -68,11 +68,17 @@ async function disappearingLinkMessageGroup(platform: SupportedPlatformsType, te
     // Let the preview load (poll rather than a fixed sleep)
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
     await alice1.clickOnElementAll(new SendButton(alice1));
+    // Timed from the tap, not from the sent tick below. The timer this test waits out starts when the
+    // app sends; the tick is when Appium first observes that, and the gap between them is subtracted
+    // from the measured lifetime. `hasElementDisappeared` rejects anything under 0.8x the timer, so on
+    // devnet's 10s timer a two-second observation lag is enough to report a correct run as a
+    // disappearing-messages bug. Only that floor reads this value — the timeout waiting for the
+    // message to go runs on its own clock — so an early reading costs nothing.
+    sentTimestamp = Date.now();
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
-    sentTimestamp = Date.now();
   });
   // Wait out the disappearing timer
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
