@@ -35,6 +35,28 @@ export abstract class LocatorsInterface {
   }
 }
 
+/**
+ * The rendered Account ID QR code on the Start Conversation sheet.
+ *
+ * Addressed so the QR can be captured on its own. The camera specs inject an image into the emulator's
+ * virtual-scene poster, which is a fixed size — so injecting a whole screenshot puts the code at
+ * whatever fraction of the frame the surrounding layout leaves it, and a code that overflows the frame
+ * cannot be decoded however well the camera works.
+ */
+export class AccountIdQRCode extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'QR code',
+        } as const;
+      case 'ios':
+        throw new Error('AccountIdQRCode: iOS not implemented; the camera specs are Android-only');
+    }
+  }
+}
+
 export class ApplyChanges extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -508,28 +530,6 @@ export class ReadReceiptsButton extends LocatorsInterface {
           strategy: 'accessibility id',
           selector: 'Read Receipts - Switch',
         } as const;
-    }
-  }
-}
-
-/**
- * The rendered Account ID QR code on the Start Conversation sheet.
- *
- * Addressed so the QR can be captured on its own. The camera specs inject an image into the emulator's
- * virtual-scene poster, which is a fixed size — so injecting a whole screenshot puts the code at
- * whatever fraction of the frame the surrounding layout leaves it, and a code that overflows the frame
- * cannot be decoded however well the camera works.
- */
-export class AccountIdQRCode extends LocatorsInterface {
-  public build(): StrategyExtractionObj {
-    switch (this.platform) {
-      case 'android':
-        return {
-          strategy: 'id',
-          selector: 'QR code',
-        } as const;
-      case 'ios':
-        throw new Error('AccountIdQRCode: iOS not implemented; the camera specs are Android-only');
     }
   }
 }

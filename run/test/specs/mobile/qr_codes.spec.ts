@@ -17,7 +17,7 @@ import { AccountRestoreButton, FastModeRadio } from '../../locators/onboarding';
 import { RecoveryPasswordMenuItem, UserSettings, ViewQR } from '../../locators/settings';
 import { JoinCommunityOption, NewMessageOption } from '../../locators/start_conversation';
 import { open_Alice1_bob1_notfriends } from '../../state_builder';
-import { clickOnCoordinates, sleepFor, verify } from '../../utils';
+import { clickOnCoordinates, verify } from '../../utils';
 import { joinCommunity } from '../../utils/community';
 import { newUser } from '../../utils/create_account';
 import { truncatePubkey } from '../../utils/get_account_id';
