@@ -12,6 +12,9 @@ import { AccountIDDisplay } from '../../locators/global';
 import {
   AppearanceMenuItem,
   ClassicLightThemeOption,
+  ClearDataConfirmButton,
+  ClearDataMenuItem,
+  ClearDeviceAndNetworkRadio,
   ConversationsMenuItem,
   FastModeOption,
   LockAppToggle,
@@ -54,6 +57,39 @@ const BASELINE_ACCOUNT: StateUser = {
 // Every case waits for something the DESTINATION has and Settings does not. The click returns before the
 // push completes, so without it a loaded host screenshots the screen behind — which reads as a wholesale
 // layout change (measured at SSIM 0.38, 37% of the frame) rather than as a capture taken too early.
+/**
+ * Wipe the baseline account from the device and the swarm once the screenshot is taken.
+ *
+ * The account is restored from a fixed seed on every run, so anything it accumulates persists across runs
+ * and eventually shows up in the very images this spec compares. Clearing device AND network leaves the
+ * seed reusable while removing the state behind it.
+ *
+ * Deliberately best-effort. This runs AFTER the assertion the spec exists for, so a teardown that glitches
+ * must not turn a passing visual check red — the failure it would report is not about the layout. It logs
+ * loudly instead, which is what makes a persistent cleanup problem visible without coupling it to the
+ * result.
+ */
+async function clearBaselineAccount(device: DeviceWrapper, atSettingsRoot: boolean): Promise<void> {
+  try {
+    if (!atSettingsRoot) {
+      // Every case above is at most one level below Settings.
+      await device.navigateBack();
+    }
+    // Scrolled on BOTH platforms, not just iOS: "Clear data" sits below the fold either way, and Android
+    // recycles off-screen rows out of the hierarchy entirely, so there it is unqueryable rather than
+    // merely out of view.
+    await device.scrollDown();
+    await device.clickOnElementAll(new ClearDataMenuItem(device));
+    await device.clickOnElementAll(new ClearDeviceAndNetworkRadio(device));
+    await device.clickOnElementAll(new ClearDataConfirmButton(device));
+    device.log('Baseline account cleared from device and network');
+  } catch (error) {
+    device.log(
+      `Could not clear the baseline account, leaving its state in place: ${(error as Error).message}`
+    );
+  }
+}
+
 const testCases = [
   {
     screenName: 'Settings page',
@@ -130,6 +166,10 @@ for (const { screenName, screenshotFile, navigation } of testCases) {
 
       await test.step(TestSteps.VERIFY.SCREENSHOT(screenName), async () => {
         await verifyPageScreenshot(device, platform, screenshotFile, testInfo, 0.96); // Lower-than-standard tolerance to account for variable elements out of our control (e.g. Account ID)
+      });
+
+      await test.step('Clear the baseline account', async () => {
+        await clearBaselineAccount(device, screenshotFile === 'settings');
       });
 
       await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
