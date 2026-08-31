@@ -3,7 +3,13 @@ import { test } from '@playwright/test';
 import { getCommunities } from '../../constants/community';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
 import { CommunityInput, JoinCommunityButton } from '../locators';
-import { ConversationHeaderName, MessageBody } from '../locators/conversation';
+import {
+  ConversationHeaderName,
+  ConversationSettings,
+  LeaveCommunityConfirm,
+  LeaveCommunityMenuItem,
+  MessageBody,
+} from '../locators/conversation';
 import { ConversationItem, PlusButton } from '../locators/home';
 import { JoinCommunityOption } from '../locators/start_conversation';
 
@@ -51,6 +57,44 @@ export const openOrJoinCommunity = async (
   await device.clickOnElementAll(new ConversationItem(device, communityName));
   await device.waitForTextElementToBePresent(new ConversationHeaderName(device, communityName));
   await device.scrollToBottom();
+};
+
+/**
+ * Leave a community, so the account's user-groups config does not keep it after the room is gone.
+ *
+ * The suite creates a per-test room and deletes it at the end, but nothing removed the JOIN — so the SOGS
+ * admin, the one identity every community test reuses, accreted 27 dead rooms. That is not untidiness: the
+ * client counts poll failures per POLL rather than per room, so any dead room drives that server's retry
+ * interval to its 30s cap and holds it there, and a 30s cap against a 30s assertion is why
+ * `Ban and unban user in community` failed while its sibling passed.
+ *
+ * Best-effort by design. It runs after the assertions a spec exists for, and an account left slightly dirty
+ * is a smaller problem than a teardown turning a passing test red — but it logs loudly, because a cleanup
+ * that silently stops working is how the 27 accumulated in the first place.
+ */
+export const leaveCommunity = async (device: DeviceWrapper, communityName: string) => {
+  try {
+    const inConversation = await device.doesElementExist({
+      ...new ConversationHeaderName(device, communityName).build(),
+      maxWait: 2_000,
+    });
+    if (!inConversation) {
+      await device.clickOnElementAll(new ConversationItem(device, communityName));
+      await device.waitForTextElementToBePresent(new ConversationHeaderName(device, communityName));
+    }
+    await device.clickOnElementAll(new ConversationSettings(device));
+    await device.clickOnElementAll(new LeaveCommunityMenuItem(device));
+    await device.clickOnElementAll(new LeaveCommunityConfirm(device));
+    await device.waitForElementToBeGone({
+      ...new ConversationItem(device, communityName).build(),
+      maxWait: 10_000,
+    });
+    device.log(`Left community "${communityName}"`);
+  } catch (error) {
+    device.log(
+      `Could not leave community "${communityName}", it stays in this account's config: ${(error as Error).message}`
+    );
+  }
 };
 
 export const joinCommunities = async (device: DeviceWrapper, toJoin: number) => {

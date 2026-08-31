@@ -224,6 +224,7 @@ export class DeleteConversationModalConfirm extends LocatorsInterface {
     }
   }
 }
+
 export class DeletedMessage extends LocatorsInterface {
   public build() {
     return {
@@ -270,7 +271,6 @@ export class EditNicknameButton extends LocatorsInterface {
     }
   }
 }
-
 export class EmojiReactsCount extends LocatorsInterface {
   constructor(
     device: DeviceWrapper,
@@ -418,6 +418,41 @@ export class ImagesFolderButton extends LocatorsInterface {
       strategy: 'accessibility id',
       selector: 'Images folder',
     } as const;
+  }
+}
+
+/** The confirmation for {@link LeaveCommunityMenuItem}. */
+export class LeaveCommunityConfirm extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'leave-community-confirm-option' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'Leave' } as const;
+    }
+  }
+}
+
+/**
+ * "Leave Community" in Conversation Settings, and its confirmation.
+ *
+ * Leaving is what removes the community from the account's user-groups config. That matters beyond the
+ * feature itself: a community left in an account's config after its room is deleted server-side keeps
+ * failing to poll, and because failure is counted per POLL rather than per room, one dead room holds that
+ * whole server's poller at its 30s retry cap — starving the live communities on it. The suite's SOGS admin
+ * had accumulated 27 such rooms, which is what made `Ban and unban user in community` fail.
+ *
+ * iOS's action is `deleteOrLeave(type: .deleteCommunityAndContent)`; its confirm button is the shared
+ * `ConfirmationModal`, whose title here is `"leave".localized()`.
+ */
+export class LeaveCommunityMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'leave-community-menu-option' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'Leave Community' } as const;
+    }
   }
 }
 export class LongPressBanAndDelete extends LocatorsInterface {
