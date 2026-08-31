@@ -7,28 +7,63 @@ import {
 } from '../locators/browsers';
 import { iOSPhotosContinuebutton } from '../locators/external';
 
-// First time open of Chrome triggers an account check and a notifications modal.
-// If the account check appears, notifications will follow after dismissing it (not detectable upfront).
-// If someone already pressed the "Use without an account" button, only the notifications prompt may appear.
-export async function handleChromeFirstTimeOpen(device: DeviceWrapper) {
-  const [useWithoutAccount, notifications] = await Promise.all([
-    device.doesElementExist({ ...new ChromeUseWithoutAnAccount(device).build(), maxWait: 2_500 }),
-    device.doesElementExist({
-      ...new ChromeNotificationsNegativeButton(device).build(),
-      maxWait: 2_500,
-    }),
-  ]);
+/**
+ * Dismiss Chrome's first-run screens, if this is the first run.
+ *
+ * First open triggers an account check and a notifications modal. If the account check appears,
+ * notifications follow after dismissing it, which is not detectable upfront; if someone already
+ * pressed "Use without an account", only the notifications prompt appears.
+ *
+ * Whether the first run is happening is decided by waiting for the address bar and the first-run
+ * screens TOGETHER, and acting on whichever arrives. It cannot be decided by a short absence: on a
+ * cold Chrome start nothing has rendered yet, so probing for the first-run screens alone reports
+ * absent for a screen that is about to appear, and the caller then waits out its whole timeout
+ * against a first-run screen it was told was not there. The address bar is what makes the negative
+ * case positive evidence — Chrome is up and past its first run — rather than an absence.
+ *
+ * The first run is once per emulator, so this is a no-op on all but one spec per pool, and which
+ * spec that is depends on scheduling.
+ *
+ * The default has to cover a COLD Chrome start on a loaded host, which is the situation this exists
+ * for: measured over 30s with four workers running. Because this throws rather than returning, the
+ * budget also has to cover what the caller's own wait used to absorb.
+ */
+export async function handleChromeFirstTimeOpen(device: DeviceWrapper, maxWait: number = 90_000) {
+  const start = Date.now();
 
-  if (!useWithoutAccount && !notifications) {
-    device.log('Chrome opened normally, proceeding');
-    return;
+  while (Date.now() - start < maxWait) {
+    const [useWithoutAccount, notifications, addressBar] = await Promise.all([
+      device.doesElementExist({ ...new ChromeUseWithoutAnAccount(device).build(), maxWait: 1_000 }),
+      device.doesElementExist({
+        ...new ChromeNotificationsNegativeButton(device).build(),
+        maxWait: 1_000,
+      }),
+      device.doesElementExist({ ...new URLInputField(device).build(), maxWait: 1_000 }),
+    ]);
+
+    if (useWithoutAccount) {
+      device.log('Chrome has been opened for the first time, dismissing the account screen');
+      await device.clickOnElementAll(new ChromeUseWithoutAnAccount(device));
+      continue;
+    }
+
+    if (notifications) {
+      device.log('Dismissing Chrome notifications prompt');
+      await device.clickOnElementAll(new ChromeNotificationsNegativeButton(device));
+      continue;
+    }
+
+    if (addressBar) {
+      device.log('Chrome is past its first run, proceeding');
+      return;
+    }
   }
 
-  device.log('Chrome has been opened for the first time, dismissing modals');
-  if (useWithoutAccount) {
-    await device.clickOnElementAll(new ChromeUseWithoutAnAccount(device));
-  }
-  await device.clickOnElementAll(new ChromeNotificationsNegativeButton(device));
+  // Out of time with neither outcome seen. Say so rather than returning quietly: the caller's own wait
+  // would otherwise report a missing address bar, which is the symptom and not the cause.
+  throw new Error(
+    `Chrome showed neither its address bar nor a first-run screen within ${maxWait}ms`
+  );
 }
 
 export async function handlePhotosFirstTimeOpen(device: DeviceWrapper) {
