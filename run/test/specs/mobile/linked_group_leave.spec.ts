@@ -48,7 +48,10 @@ async function leaveGroupLinkedDevice(platform: SupportedPlatformsType, testInfo
     [device3, device4].map(device =>
       device.waitForElementToBeGone({
         ...new ConversationItem(device, testGroupName).build(),
-        maxWait: 10_000,
+        // Budgeted for device4, where this is the only network round-trip in the test: device3 leaves
+        // locally, but its linked device has to be told by config sync. The suite gives a network wait
+        // 30s; `waitForElementToBeGone` defaults to 5s because it usually guards a local removal.
+        maxWait: 30_000,
       })
     )
   );
