@@ -176,6 +176,20 @@ export type AndroidOnlyContext = {
    * still holds across a relaunch.
    */
   androidInstallState?: 'freshInstall' | 'updated' | 'useActual';
+
+  /**
+   * Whether the runtime notification permission is granted before the spec starts (Android).
+   *
+   * Granted by default, because Android raises the `POST_NOTIFICATIONS` prompt the first time the app
+   * posts a notification — i.e. whenever a message happens to arrive — so left to itself it lands mid-
+   * step and covers whatever the spec was doing.
+   *
+   * `'ask'` leaves it ungranted, for the specs whose SUBJECT is a permission flow: the calls specs
+   * assert the app's own "notifications are required for calls" modal, which the app has no reason to
+   * raise once the permission is already held. Those specs are testing the prompt, so the prompt has to
+   * be reachable.
+   */
+  androidNotificationPermission?: 'ask' | 'granted';
 };
 
 /**

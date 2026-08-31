@@ -2854,17 +2854,22 @@ export class DeviceWrapper implements IMobileWrapper {
     }
 
     const action = granted ? 'grant' : 'revoke';
-    // Deliberately not routed through runScriptAndLog: that logs failures and returns, and a silently
-    // ungranted permission is exactly the state this exists to prevent.
-    try {
-      await this.toShared().execute('mobile: shell', {
-        command: 'pm',
-        args: [action, androidAppPackage, 'android.permission.POST_NOTIFICATIONS'],
-      });
-      this.log(`Notification permission ${granted ? 'granted' : 'revoked'}`);
-    } catch (error) {
-      this.log(`Could not ${action} POST_NOTIFICATIONS: ${(error as Error).message}`);
+    // Driven through the adb binary rather than `mobile: shell`, which is gated behind Appium's
+    // `adb_shell` insecure feature and rejected outright unless the server is started with it. That
+    // rejection is indistinguishable from any other shell failure, so the permission was never
+    // granted on any session.
+    //
+    // Failure throws rather than logging: a silently ungranted permission is exactly the state this
+    // exists to prevent, and it resurfaces as an unrelated element-not-found wherever the system
+    // dialog happens to land. `pm` also reports some refusals on stdout while exiting 0, so its
+    // output is checked as well — a grant that took prints nothing.
+    const output = await runScriptOrThrow(
+      `${getAdbFullPath()} -s ${this.getUdid()} shell pm ${action} ${androidAppPackage} android.permission.POST_NOTIFICATIONS`
+    );
+    if (output.trim()) {
+      throw new Error(`Could not ${action} POST_NOTIFICATIONS: ${output.trim()}`);
     }
+    this.log(`Notification permission ${granted ? 'granted' : 'revoked'}`);
   }
 
   public async processPermissions(locator: LocatorsInterface | StrategyExtractionObj) {
@@ -3021,11 +3026,24 @@ export class DeviceWrapper implements IMobileWrapper {
   /**
    * Checks modal heading and description text against expected values.
    * Uses fallback locators to support both new (id) and legacy (accessibility id) variants on Android.
+   *
+   * The wait is set here rather than left to `findWithFallback`'s 3s default because a modal is
+   * asserted straight after the interaction that raises it, so this has to cover the app rendering it
+   * — and, more importantly, a single page query is not always cheap. On a screen holding a
+   * 10001-character composer one `id` lookup measured 3661ms, which is longer than that default: the
+   * budget bought exactly one attempt, and a modal that arrived a moment later was never seen again.
+   * The allowance has to fit several of the slowest query this suite performs, not one of a fast one.
+   *
    * @param expectedHeading - Expected modal heading string
    * @param expectedDescription - Expected modal description string
+   * @param maxWait - How long to wait for each of the two elements
    * @throws Error if heading or description doesn't match expected text
    */
-  public async checkModalStrings(expectedHeading: string, expectedDescription: string) {
+  public async checkModalStrings(
+    expectedHeading: string,
+    expectedDescription: string,
+    maxWait: number = 15_000
+  ) {
     // Always try new first, fall back to legacy
     const newHeading = new ModalHeading(this).build();
     const legacyHeading = {
