@@ -457,11 +457,21 @@ export class JoinCommunityModalButton extends LocatorsInterface {
   }
 }
 
+/**
+ * The link preview as it appears in the COMPOSER, before the message is sent.
+ *
+ * Distinct from {@link LinkPreviewMessage}, which is the preview on a message already in the
+ * conversation — Android gives the two different ids and a spec that waits for the wrong one either
+ * throws or waits for something that cannot be there yet.
+ */
 export class LinkPreview extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
-        throw new Error(`No such element on Android`);
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/linkPreviewDraftContainer',
+        };
       case 'ios':
         return {
           strategy: 'accessibility id',

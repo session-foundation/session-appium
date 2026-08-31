@@ -642,6 +642,7 @@ export type Id =
   | 'network.loki.messenger:id/emptyStateContainer'
   | 'network.loki.messenger:id/endCallButton'
   | 'network.loki.messenger:id/layout_emoji_container'
+  | 'network.loki.messenger:id/linkPreviewDraftContainer'
   | 'network.loki.messenger:id/linkPreviewView'
   | 'network.loki.messenger:id/messageStatusTextView'
   | 'network.loki.messenger:id/openGroupTitleTextView'

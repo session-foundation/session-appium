@@ -122,7 +122,8 @@ async function disappearingLinkMessage1o1Android(
       );
     });
     await alice1.clickOnElementAll(new EnableLinkPreviewsModalButton(alice1));
-    // Wait for the link preview to load (poll rather than a fixed sleep)
+    // The preview has to be up before the message is sent, or the message carries none and the
+    // disappearance check below has nothing to wait out.
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
     await alice1.clickOnElementAll(new SendButton(alice1));
     // Stamped at the tap for the reason `sendMessage` documents: the tick is when Appium observes the
