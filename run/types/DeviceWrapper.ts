@@ -9,6 +9,8 @@ import { W3CXCUITestDriverCaps, XCUITestDriver } from 'appium-xcuitest-driver/bu
 import fs from 'fs/promises';
 import Fuse from 'fuse.js';
 import { isArray, isEmpty } from 'lodash';
+import { createHash } from 'crypto';
+import * as os from 'os';
 import * as path from 'path';
 import sharp from 'sharp';
 import * as sinon from 'sinon';
@@ -212,6 +214,13 @@ function applicationDimension(source: string, attr: 'height' | 'width'): number 
   return Number(value);
 }
 
+/**
+ * The largest poster texture the emulator's virtual scene will draw. Above it the scene draws nothing at
+ * all and the emulator console still reports `OK`, so an oversized image looks exactly like an injection
+ * that never happened.
+ */
+const SCENE_POSTER_MAX_PX = 500;
+
 export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
@@ -404,14 +413,65 @@ export class DeviceWrapper implements IMobileWrapper {
   /**
    * Injects a base64-encoded image into the Android emulator's virtual camera scene.
    */
+  /**
+   * Show an image on the emulator's virtual-scene poster, which is what its camera then sees.
+   *
+   * The image is resized to {@link SCENE_POSTER_MAX_PX} and forced to RGBA first, because the scene
+   * silently refuses anything else and the emulator console reports `OK` either way. Measured against
+   * the poster directly: a 954x954 RGBA texture is not drawn at all — the camera shows the room behind
+   * it, which reads as "the injection never happened" — while the same image at 500x500 renders. An
+   * image without an alpha channel is drawn as solid black.
+   */
   public async injectImageToScene(base64Image: string): Promise<void> {
     if (this.isAndroid()) {
-      await this.toShared().execute('mobile: injectEmulatorCameraImage', {
-        payload: base64Image,
-      });
+      const payload = (
+        await sharp(Buffer.from(base64Image, 'base64'))
+          .resize(SCENE_POSTER_MAX_PX, SCENE_POSTER_MAX_PX, { fit: 'contain', background: 'white' })
+          .flatten({ background: 'white' })
+          .ensureAlpha()
+          .png()
+          .toBuffer()
+      ).toString('base64');
+      // Driven through the emulator console rather than `mobile: injectEmulatorCameraImage`. The driver
+      // command reports success and leaves the poster undrawn, while the same bytes sent by this route
+      // render — verified against the poster directly on more than one emulator.
+      // Named by content, not by device. The emulator caches the poster texture against the file path,
+      // so reusing one path silently keeps the first image every later run is compared against — a scan
+      // then decodes a PREVIOUS run's code and the failure names the wrong account rather than the cache.
+      const posterHash = createHash('sha1').update(payload).digest('hex').slice(0, 16);
+      const posterPath = path.join(os.tmpdir(), `scene-poster-${posterHash}.png`);
+      await fs.writeFile(posterPath, Buffer.from(payload, 'base64'));
+
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s ${this.getUdid()} emu virtualscene-image table ${posterPath}`,
+        true
+      );
       this.log(`Injected image to scene`);
     }
     // iOS: no-op
+  }
+
+  /**
+   * Keep the scene showing `base64Image` until `hasLanded` reports the app has acted on it.
+   *
+   * Two things make a single send unreliable, and both are invisible from here: a poster handed to a
+   * scene whose camera has just started is drawn as a solid black panel, and the previous run's poster
+   * survives in a still-running emulator, so a scanner can decode a stale code before a new one arrives.
+   * Re-sending until the caller's own condition holds covers both without guessing at a delay, and stops
+   * immediately once it does.
+   */
+  public async injectImageToSceneUntil(
+    base64Image: string,
+    hasLanded: () => Promise<boolean>,
+    attempts: number = 8
+  ): Promise<void> {
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      await this.injectImageToScene(base64Image);
+      if (await hasLanded()) {
+        return;
+      }
+    }
+    this.info(`The scene still has not shown the injected image after ${attempts} attempts`);
   }
 
   /* === all the device-specific function ===  */
