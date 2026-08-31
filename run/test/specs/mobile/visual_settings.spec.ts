@@ -13,12 +13,12 @@ import {
   AppearanceMenuItem,
   ClassicLightThemeOption,
   ConversationsMenuItem,
+  FastModeOption,
   LockAppToggle,
   NotificationsMenuItem,
   PrivacyMenuItem,
   UserSettings,
 } from '../../locators/settings';
-import { sleepFor } from '../../utils';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
@@ -88,12 +88,7 @@ const testCases = [
       await device.clickOnElementAll(new UserSettings(device));
       await device.onIOS().scrollDown();
       await device.clickOnElementAll(new NotificationsMenuItem(device));
-      // TODO: replace with a wait on the destination, as the other four do. The screen's Fast Mode row
-      // is the natural anchor but carries no id Android and iOS agree on, so there is nothing to wait
-      // for yet; both clients have been asked to add one. Until then this sleep is the only thing
-      // between the click and the capture, and it is a guess — too short on a loaded host, wasted on
-      // an idle one.
-      await sleepFor(1_000);
+      await device.waitForTextElementToBePresent(new FastModeOption(device));
     },
   },
   {

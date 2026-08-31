@@ -676,6 +676,7 @@ export type Id =
   | 'pin-conversation-menu-option'
   | 'preferences-dialog-option-enable'
   | 'preferences-option-blocked-contacts'
+  | 'preferences-option-enable-push'
   | 'preferences-option-lock-app-toggle'
   | 'preferences-option-lock-app'
   | 'preferences-option-read-receipt'

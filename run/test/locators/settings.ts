@@ -245,6 +245,25 @@ export class DonationsMenuItem extends LocatorsInterface {
   }
 }
 
+/**
+ * The Fast Mode row on the Notifications screen, addressed by its title.
+ *
+ * The row's toggle is tagged separately; this is the title, so waiting on it says the screen is up without
+ * touching the control a spec might want to operate. Both clients carry the same id — see the id's own
+ * kebab-case form, which is what lets one locator serve both.
+ */
+export class FastModeOption extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+      case 'ios':
+        return {
+          strategy: 'id',
+          selector: 'preferences-option-enable-push',
+        } as const;
+    }
+  }
+}
 export class HideRecoveryPasswordButton extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
@@ -261,6 +280,7 @@ export class HideRecoveryPasswordButton extends LocatorsInterface {
     }
   }
 }
+
 export class LockAppOption extends LocatorsInterface {
   public build() {
     switch (this.platform) {
