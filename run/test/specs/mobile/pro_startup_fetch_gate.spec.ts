@@ -71,7 +71,10 @@ async function proStartupFetchGate(platform: SupportedPlatformsType, testInfo: T
   });
 
   await test.step('Verify the next launch warns', async () => {
-    await forceStopAndRestart(device);
+    // Not waiting for the home screen: the CTA asserted next replaces it in the view hierarchy, so
+    // that wait could only succeed if the CTA were slow. `checkCTA` polls. The launch above is the
+    // opposite case — it asserts the CTA's ABSENCE, so it does need the home screen first.
+    await forceStopAndRestart(device, false);
     await device.checkCTA('proExpiringSoon');
     await device.dismissCTA('negativeButton');
   });

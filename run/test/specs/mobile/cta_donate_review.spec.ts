@@ -12,16 +12,10 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
-import { MobileTestContext } from '../../utils/pro_context';
+import { FRESH_INSTALL_CONTEXT } from '../../utils/pro_context';
+import { returnHomeFromPath } from '../../utils/review_prompt';
 import { forceStopAndRestart } from '../../utils/utilities';
 import { verifyPageScreenshot } from '../../utils/verify_screenshots';
-
-/**
- * The review prompt's Path and Theme triggers only qualify on a fresh install, and Appium always
- * installs over an existing package — so without this the app reads as updated and those triggers never
- * raise the prompt. iOS is unaffected and ignores the extra.
- */
-const FRESH_INSTALL: MobileTestContext = { androidInstallState: 'freshInstall' };
 
 bothPlatformsIt({
   title: 'Donate CTA shows after positive review',
@@ -37,20 +31,25 @@ bothPlatformsIt({
 
 async function donateCTAReview(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, FRESH_INSTALL);
+    const { device } = await openAppOnPlatformSingleDevice(
+      platform,
+      testInfo,
+      FRESH_INSTALL_CONTEXT
+    );
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
   await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new PathMenuItem(device));
-    await device.back();
-    await device.back();
+    await returnHomeFromPath(device);
   });
   await test.step('Dismiss review prompt and restart the app', async () => {
     await device.clickOnElementAll(new ReviewPromptItsGreatButton(device));
     await device.clickOnElementAll(new CloseSettings(device));
-    await forceStopAndRestart(device);
+    // Not waiting for the home screen: the CTA asserted next replaces it in the view
+    // hierarchy, so that wait could only succeed if the CTA were slow. `checkCTA` polls.
+    await forceStopAndRestart(device, false);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Donate CTA'), async () => {
     await device.checkCTA('donate');

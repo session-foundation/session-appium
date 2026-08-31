@@ -17,15 +17,9 @@ import {
   SupportedPlatformsType,
 } from '../../utils/open_app';
 import { checkOpenUrlDialogStrings } from '../../utils/open_url_dialog';
-import { MobileTestContext } from '../../utils/pro_context';
+import { FRESH_INSTALL_CONTEXT } from '../../utils/pro_context';
+import { returnHomeFromPath } from '../../utils/review_prompt';
 import { assertUrlIsReachable } from '../../utils/utilities';
-
-/**
- * The review prompt's Path and Theme triggers only qualify on a fresh install, and Appium always
- * installs over an existing package — so without this the app reads as updated and those triggers never
- * raise the prompt. iOS is unaffected and ignores the extra.
- */
-const FRESH_INSTALL: MobileTestContext = { androidInstallState: 'freshInstall' };
 
 bothPlatformsIt({
   title: 'Review prompt negative flow',
@@ -42,7 +36,11 @@ bothPlatformsIt({
 
 async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, FRESH_INSTALL);
+    const { device } = await openAppOnPlatformSingleDevice(
+      platform,
+      testInfo,
+      FRESH_INSTALL_CONTEXT
+    );
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -53,8 +51,7 @@ async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: 
 
   await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new PathMenuItem(device));
-    await device.back();
-    await device.back();
+    await returnHomeFromPath(device);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Enjoying Session'), async () => {
     await device.checkModalStrings(
