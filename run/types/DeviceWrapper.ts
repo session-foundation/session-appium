@@ -2922,7 +2922,17 @@ export class DeviceWrapper implements IMobileWrapper {
 
   /**
    * Asserts that actual text matches expected text.
-   * @throws Error with detailed message if texts don't match
+   *
+   * A difference that survives {@link sanitizeString} but disappears once every run of whitespace is
+   * collapsed is reported rather than thrown. The two clients disagree about redundant whitespace — a
+   * doubled space in a source string renders as two on iOS and one on Android — so failing on it fails the
+   * spec for something no reader of the app can see, on one platform only. Losing the difference silently
+   * would be worse: the annotation surfaces as a step in the report, so the copy can still be corrected at
+   * the source without the suite treating it as a defect in the app.
+   *
+   * Anything that survives the collapse is a real difference in the words and still throws.
+   *
+   * @throws Error if the texts differ by more than whitespace
    */
   private assertTextMatches(actual: string, expected: string, fieldName: string): void {
     const sanitizedActual = this.sanitizeString(actual);
@@ -2930,11 +2940,20 @@ export class DeviceWrapper implements IMobileWrapper {
 
     if (sanitizedExpected === sanitizedActual) {
       this.log(`${fieldName} is correct`);
-    } else {
-      throw new Error(
-        `${fieldName} is incorrect.\nExpected: ${sanitizedExpected}\nActual: ${sanitizedActual}`
-      );
+      return;
     }
+
+    const collapseWhitespace = (value: string) => value.replace(/\s+/g, ' ');
+    if (collapseWhitespace(sanitizedExpected) === collapseWhitespace(sanitizedActual)) {
+      const description = `${fieldName} matches except for whitespace.\nExpected: ${sanitizedExpected}\nActual: ${sanitizedActual}`;
+      this.info(description);
+      this.testInfo.annotations.push({ type: 'copy-whitespace', description });
+      return;
+    }
+
+    throw new Error(
+      `${fieldName} is incorrect.\nExpected: ${sanitizedExpected}\nActual: ${sanitizedActual}`
+    );
   }
 
   /**
