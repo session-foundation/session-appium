@@ -265,7 +265,14 @@ export async function captureLogsOnFailure(testInfo: TestInfo): Promise<void> {
         const buffer = tailBuffer(raw);
         const label = device.getDeviceIdentity();
         const truncated = raw.length !== buffer.length;
-        await testInfo.attach(`device-log-${label}`, { body: buffer, contentType: 'text/plain' });
+        // By path rather than as a body, for the same reason the page source below is: an in-memory
+        // attachment only survives if a reporter persists it, and the default local reporter does not —
+        // so the log existed in the report stream and nowhere a developer could open it. That is the
+        // difference between "we added logging" and "we can read the logging", and it cost a run of
+        // `Delete group linked device` captured specifically to read new config-sync logs.
+        const file = testInfo.outputPath(`device-log-${label}.txt`);
+        fs.writeFileSync(file, buffer);
+        await testInfo.attach(`device-log-${label}`, { path: file, contentType: 'text/plain' });
         console.log(
           `Log captured for ${label} (${buffer.length} bytes${truncated ? `, truncated from ${raw.length}` : ''})`
         );
