@@ -2057,8 +2057,10 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.clickOnElementAll(new NewMessageOption(this));
     // Enter User B's session ID into input box
     await this.inputText(user.sessionId, new EnterAccountID(this));
-    // Click next
-    await this.scrollDown();
+    // The keyboard covers Next on smaller screens, so it has to go — but by asking the driver, not by
+    // scrolling. This is a bottom sheet: a swipe drags the sheet itself, and the tap that follows lands
+    // on nothing, leaving the Account ID entered and Next untouched.
+    await this.hideKeyboard();
     await this.clickOnElementAll(new NextButton(this));
     // Type message into message input box
 
