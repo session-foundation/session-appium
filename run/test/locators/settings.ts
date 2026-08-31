@@ -256,9 +256,13 @@ export class FastModeOption extends LocatorsInterface {
   public build() {
     switch (this.platform) {
       case 'android':
-      case 'ios':
         return {
           strategy: 'id',
+          selector: 'preferences-option-enable-push',
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
           selector: 'preferences-option-enable-push',
         } as const;
     }
@@ -357,7 +361,7 @@ export class PrivacyMenuItem extends LocatorsInterface {
           selector: 'Privacy',
         } as const;
       case 'ios':
-        return { strategy: 'id', selector: 'Privacy' } as const;
+        return { strategy: 'accessibility id', selector: 'Privacy' } as const;
     }
   }
 }

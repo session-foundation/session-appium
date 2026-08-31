@@ -152,7 +152,7 @@ export class ClearInputButton extends LocatorsInterface {
         } as const;
       case 'ios':
         return {
-          strategy: 'id',
+          strategy: 'accessibility id',
           selector: 'clear-input-button',
         } as const;
     }
