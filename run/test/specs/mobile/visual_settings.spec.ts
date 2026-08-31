@@ -1,31 +1,66 @@
+import type { StateUser } from '@session-foundation/qa-seeder';
+
 import { test, type TestInfo } from '@playwright/test';
+import { mnDecode } from '@session-foundation/mnemonic';
 
 import { TestSteps } from '../../../types/allure';
 import { DeviceWrapper } from '../../../types/DeviceWrapper';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
-import { NotificationsMenuItem } from '../../locators/settings';
+import { BlockedContactsSettings } from '../../locators';
+import { AccountIDDisplay } from '../../locators/global';
 import {
   AppearanceMenuItem,
+  ClassicLightThemeOption,
   ConversationsMenuItem,
+  LockAppToggle,
+  NotificationsMenuItem,
   PrivacyMenuItem,
   UserSettings,
 } from '../../locators/settings';
 import { sleepFor } from '../../utils';
-import { newUser } from '../../utils/create_account';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { restoreAccount } from '../../utils/restore_account';
 import { verifyPageScreenshot } from '../../utils/verify_screenshots';
 
+/**
+ * The account every baseline on these screens is captured with. It has to be fixed: the Settings screen
+ * renders the Account ID and an avatar coloured from the pubkey, and a generated account moves both on
+ * every run — 83,623 pixels, 2.64% of the frame, and nothing outside those two elements. A threshold
+ * loose enough to absorb that cannot describe rendering, which is what these specs are for.
+ *
+ * A throwaway devnet identity with nothing attached to it, checked in deliberately: the suite's other
+ * fixed account (`SOGS_ADMIN_SEED`) is an env var because it holds real admin rights on a SOGS server,
+ * and this one holds nothing. `restoreAccount` rather than `restoreAccountNoFallback` because a rebuilt
+ * devnet has no config for it, and the fallback fills the display name in rather than failing.
+ */
+const BASELINE_SEED_PHRASE =
+  'bevel zebra roomy focus cowl avatar february moat website oven amaze hoisting bevel';
+
+const BASELINE_ACCOUNT: StateUser = {
+  // Decoded rather than written out, so the bytes cannot drift from the phrase above.
+  seed: Buffer.from(mnDecode(BASELINE_SEED_PHRASE), 'hex'),
+  seedPhrase: BASELINE_SEED_PHRASE,
+  // What the app itself renders on the Settings screen for this seed, so the baseline and this
+  // constant describe the same account.
+  sessionId: '05abbe8736e2af3b64a47407cf4d63da990e45e4be5ac9e95b88e8fc93a09ed04d',
+  userName: USERNAME.ALICE,
+};
+
+// Every case waits for something the DESTINATION has and Settings does not. The click returns before the
+// push completes, so without it a loaded host screenshots the screen behind — which reads as a wholesale
+// layout change (measured at SSIM 0.38, 37% of the frame) rather than as a capture taken too early.
 const testCases = [
   {
     screenName: 'Settings page',
     screenshotFile: 'settings',
     navigation: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new UserSettings(device));
+      await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
     },
   },
   {
@@ -34,6 +69,7 @@ const testCases = [
     navigation: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new UserSettings(device));
       await device.clickOnElementAll(new PrivacyMenuItem(device));
+      await device.waitForTextElementToBePresent(new LockAppToggle(device));
     },
   },
   {
@@ -42,6 +78,7 @@ const testCases = [
     navigation: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new UserSettings(device));
       await device.clickOnElementAll(new ConversationsMenuItem(device));
+      await device.waitForTextElementToBePresent(new BlockedContactsSettings(device));
     },
   },
   {
@@ -51,7 +88,12 @@ const testCases = [
       await device.clickOnElementAll(new UserSettings(device));
       await device.onIOS().scrollDown();
       await device.clickOnElementAll(new NotificationsMenuItem(device));
-      await sleepFor(1_000); // This one otherwise captures a black screen
+      // TODO: replace with a wait on the destination, as the other four do. The screen's Fast Mode row
+      // is the natural anchor but carries no id Android and iOS agree on, so there is nothing to wait
+      // for yet; both clients have been asked to add one. Until then this sleep is the only thing
+      // between the click and the capture, and it is a guess — too short on a loaded host, wasted on
+      // an idle one.
+      await sleepFor(1_000);
     },
   },
   {
@@ -60,6 +102,10 @@ const testCases = [
     navigation: async (device: DeviceWrapper) => {
       await device.clickOnElementAll(new UserSettings(device));
       await device.clickOnElementAll(new AppearanceMenuItem(device));
+      // A theme row rather than the app icon row further down the screen: iOS only publishes the table
+      // cells it has rendered, so an element below the fold is present or absent depending on how far
+      // the list happened to build — which fails the wait on a screen that is fully up.
+      await device.waitForTextElementToBePresent(new ClassicLightThemeOption(device));
     },
   },
 ] as const;
@@ -75,10 +121,9 @@ for (const { screenName, screenshotFile, navigation } of testCases) {
     },
     allureDescription: `Verifies that the ${screenName} screen layout matches the expected baseline`,
     testCb: async (platform: SupportedPlatformsType, testInfo: TestInfo) => {
-      const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
+      const { device } = await test.step('Restore the baseline account', async () => {
         const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
-        await newUser(device, USERNAME.ALICE, {
-          saveUserData: false,
+        await restoreAccount(device, BASELINE_ACCOUNT, 'alice1', {
           allowNotificationPermissions: false,
         });
         return { device };

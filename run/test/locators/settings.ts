@@ -284,7 +284,10 @@ export class LockAppToggle extends LocatorsInterface {
           selector: 'preferences-option-lock-app-toggle',
         } as const;
       case 'ios':
-        throw new Error('Not implemented on iOS');
+        return {
+          strategy: 'accessibility id',
+          selector: 'Lock App - Switch',
+        } as const;
     }
   }
 }

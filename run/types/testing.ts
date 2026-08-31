@@ -349,6 +349,7 @@ export type AccessibilityId =
   | 'Link preview'
   | 'Loading animation'
   | 'Local Network Permission - Switch'
+  | 'Lock App - Switch'
   | 'Manage Members'
   | 'Market cap amount'
   | 'Maybe Later'
