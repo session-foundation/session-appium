@@ -60,9 +60,11 @@ async function disappearingCommunityInviteMessage(
   await alice1.clickOnElementAll(new InviteContactsMenuItem(alice1));
   await alice1.clickOnElementAll(new GroupMember(alice1).build(bob.userName));
   await alice1.clickOnElementAll(new CommunityInviteConfirmButton(alice1));
+  // Stamped at the send, before the delivery check below: the timer starts when alice sends, so the
+  // time bob takes to receive would otherwise come off the lifetime `hasElementDisappeared` measures.
+  const communityInviteTimestamp = Date.now();
   // The community invite process fails silently so we will check if the invite came through first
   await bob1.waitForTextElementToBePresent(new CommunityInvitation(bob1));
-  const communityInviteTimestamp = Date.now();
   // Bob already has the convo open so we can start checking for the disappearing message immediately
   await bob1.hasElementDisappeared({
     ...new CommunityInvitation(bob1).build(),

@@ -1962,6 +1962,15 @@ export class DeviceWrapper implements IMobileWrapper {
   }
   // UTILITY FUNCTIONS
 
+  /**
+   * Stamped at the send action, not at the sent tick below.
+   *
+   * Callers hand this to `hasElementDisappeared` as the moment the message's timer started, and that
+   * check rejects a lifetime under 0.8x the timer as a product bug. The tick is only when Appium first
+   * observes the send, so any delay in observing it is subtracted from the measured lifetime: on
+   * devnet's 10s timer, two seconds of lag is enough to report a correct run as a bug. Reading it early
+   * can only overstate the lifetime, and nothing checks for that.
+   */
   public async sendMessage(message: string): Promise<number> {
     await this.inputText(message, new MessageInput(this));
 
@@ -1971,12 +1980,12 @@ export class DeviceWrapper implements IMobileWrapper {
     if (!sendButton) {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
+    const sentTimestamp = Date.now();
     // Wait for tick
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -2231,6 +2240,7 @@ export class DeviceWrapper implements IMobileWrapper {
     }
     await this.inputText(message, new MessageInput(this));
     await this.clickOnElementAll(new SendButton(this));
+    const sentTimestamp = Date.now();
     if (community) {
       await this.scrollToBottom();
     }
@@ -2238,7 +2248,6 @@ export class DeviceWrapper implements IMobileWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
   public async sendVideoiOS(message: string): Promise<number> {
@@ -2252,12 +2261,11 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.waitForTextElementToBePresent({ strategy: 'accessibility id', selector: 'Recents' });
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage({ type: 'XCUIElementTypeCell' }, testVideoThumbnail);
-    await this.sendMessage(message);
+    const sentTimestamp = await this.sendMessage(message);
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -2311,11 +2319,11 @@ export class DeviceWrapper implements IMobileWrapper {
     } else {
       throw new Error(`Video "${testVideo}" not found after attempting to reveal it.`);
     }
+    const sentTimestamp = Date.now();
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -2414,12 +2422,12 @@ export class DeviceWrapper implements IMobileWrapper {
     if (this.isIOS()) {
       await this.clickOnElementAll(new SendButton(this));
     }
+    const sentTimestamp = Date.now();
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -2438,12 +2446,12 @@ export class DeviceWrapper implements IMobileWrapper {
     }
 
     await this.pressAndHold('New voice message');
+    const sentTimestamp = Date.now();
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 

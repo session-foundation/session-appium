@@ -70,11 +70,13 @@ async function disappearingLinkMessage1o1Ios(platform: SupportedPlatformsType, t
     await alice1.inputText(testLink, new MessageInput(alice1));
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
     await alice1.clickOnElementAll(new SendButton(alice1));
+    // Stamped at the tap for the reason `sendMessage` documents: the tick is when Appium observes the
+    // send, and the gap comes off the lifetime `hasElementDisappeared` measures.
+    sentTimestamp = Date.now();
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
-    sentTimestamp = Date.now();
   });
   // Wait out the disappearing timer
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
@@ -123,11 +125,13 @@ async function disappearingLinkMessage1o1Android(
     // Wait for the link preview to load (poll rather than a fixed sleep)
     await alice1.waitForTextElementToBePresent(new LinkPreview(alice1));
     await alice1.clickOnElementAll(new SendButton(alice1));
+    // Stamped at the tap for the reason `sendMessage` documents: the tick is when Appium observes the
+    // send, and the gap comes off the lifetime `hasElementDisappeared` measures.
+    sentTimestamp = Date.now();
     await alice1.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(alice1).build(),
       maxWait: 20000,
     });
-    sentTimestamp = Date.now();
   });
   await test.step(TestSteps.VERIFY.MESSAGE_DISAPPEARED, async () => {
     await Promise.all(
