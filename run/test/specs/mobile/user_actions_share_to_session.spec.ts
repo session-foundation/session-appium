@@ -14,6 +14,9 @@ import {
 } from '../../locators/conversation';
 import { PhotoLibrary } from '../../locators/external';
 import { Contact } from '../../locators/global';
+import { PlusButton } from '../../locators/home';
+import { ConversationItem } from '../../locators/home';
+import { EnterAccountID, NewMessageOption, NextButton } from '../../locators/start_conversation';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { sleepFor } from '../../utils';
 import { handlePhotosFirstTimeOpen } from '../../utils/handle_first_open';
@@ -98,6 +101,7 @@ async function shareToSession(platform: SupportedPlatformsType, testInfo: TestIn
 async function shareInSession(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const {
     devices: { alice1, bob1 },
+    prebuilt,
   } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
     return open_Alice1_Bob1_friends({
       platform,
@@ -106,6 +110,23 @@ async function shareInSession(platform: SupportedPlatformsType, testInfo: TestIn
     });
   });
   const testMessage = 'Testing forwarding an image within Session';
+  // The forward target has to exist before it can be picked, and a seeded account has no Note to Self:
+  // the seeder hides it on every account it creates, which is what a freshly created account looks like
+  // on any client. Opening the conversation is not enough to surface it — it takes a message sent into
+  // it, or "Show Note to Self" from its conversation settings — so this sends one.
+  await test.step(TestSteps.OPEN.NTS, async () => {
+    await alice1.navigateBack();
+    await alice1.clickOnElementAll(new PlusButton(alice1));
+    await alice1.clickOnElementAll(new NewMessageOption(alice1));
+    await alice1.inputText(prebuilt.alice.sessionId, new EnterAccountID(alice1));
+    // The keyboard covers Next on smaller screens. Do NOT swipe here: this is a bottom sheet, so a
+    // scroll drags the sheet and the tap silently misses.
+    await alice1.hideKeyboard();
+    await alice1.clickOnElementAll(new NextButton(alice1));
+    await alice1.sendMessage('Bringing Note to Self into the conversation list');
+    await alice1.navigateBack();
+    await alice1.clickOnElementAll(new ConversationItem(alice1, prebuilt.bob.userName));
+  });
   await test.step(TestSteps.SEND.IMAGE, async () => {
     await alice1.sendImage(testMessage);
   });
