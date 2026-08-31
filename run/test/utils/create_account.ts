@@ -122,7 +122,24 @@ export async function harvestAccountData(
   const recoveryPhrase = await device.getTextFromElement(recoveryPhraseContainer);
   device.log(`Recovery phrase is "${recoveryPhrase}"`);
   await device.navigateBack(false);
-  await device.scrollUp();
+  // The scroll is retried rather than issued once. `navigateBack` returns as soon as it has tapped, so
+  // the scroll can land while the Recovery Password screen is still going away and be swallowed —
+  // leaving Settings scrolled where that navigation had put it. Android recycles off-screen rows out of
+  // the accessibility hierarchy, so `Account ID` is then not merely off-screen, it is unqueryable, and
+  // this fails as a missing element inside `newUser` on a spec that never mentioned Settings.
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await device.scrollUp();
+    const onScreen = await device.doesElementExist({
+      ...new AccountIDDisplay(device).build(),
+      maxWait: 5_000,
+    });
+    if (onScreen) {
+      break;
+    }
+    device.log(
+      `Account ID not on screen after scrolling up (attempt ${attempt}/3), scrolling again`
+    );
+  }
   // Get Account ID from User Settings
   const el = await device.waitForTextElementToBePresent(new AccountIDDisplay(device));
   // Harvested from on-screen text, so its `05…` shape is the app's guarantee rather than the compiler's.
