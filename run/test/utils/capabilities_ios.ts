@@ -4,7 +4,7 @@ import { W3CXCUITestDriverCaps } from 'appium-xcuitest-driver/build/lib/driver';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
 
-import type { MobileTestContext } from './pro_context';
+import type { IOSOnlyContext, MobileTestContext, ProContext } from './pro_context';
 
 import { WDA_DERIVED_DATA_PATH, WDA_PREBUILT_APP_PATH } from '../../../scripts/build_wda';
 import { resolveRunSimulators, type Simulator } from '../../../scripts/ios_shared';
@@ -14,17 +14,18 @@ import { getResolvedDevnetSeedNode, getServiceNetwork } from './network_target';
 dotenv.config({ quiet: true });
 
 /**
- * `MobileTestContext` field -> the env key the app reads.
+ * The context field iOS reads -> the env key the app reads.
  *
  * How the mocks reach the app on iOS: launch-arg env variables read by
  * `DeveloperSettingsViewModel.processUnitTestEnvVariablesIfNeeded`, compiled only under
  * `#if targetEnvironment(simulator)`. The vocabulary itself is shared — see `pro_context.ts`.
  *
- * Exhaustive over the context type, so a field added there is a compile error until it is wired up here
- * rather than a mock that silently does nothing. The app's `EnvironmentVariable` enum is `String`-backed
- * with no explicit raw values, so each key is that case's name verbatim.
+ * Exhaustive over the context iOS reads — the shared `ProContext` plus its own half — so a field added to
+ * either is a compile error until it is wired up here rather than a mock that silently does nothing. The
+ * app's `EnvironmentVariable` enum is `String`-backed with no explicit raw values, so each key is that
+ * case's name verbatim.
  */
-const IOS_TEST_ENV_KEYS: Record<keyof MobileTestContext, string> = {
+const IOS_TEST_ENV_KEYS: Record<keyof (ProContext & IOSOnlyContext), string> = {
   iosCustomInstallTime: 'customFirstInstallDateTime',
   proBackendStatus: 'mockCurrentUserSessionProBackendStatus',
   proLoadingState: 'mockCurrentUserSessionProLoadingState',

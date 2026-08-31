@@ -19,6 +19,14 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { MobileTestContext } from '../../utils/pro_context';
+
+/**
+ * The review prompt's Path and Theme triggers only qualify on a fresh install, and Appium always
+ * installs over an existing package — so without this the app reads as updated and those triggers never
+ * raise the prompt. iOS is unaffected and ignores the extra.
+ */
+const FRESH_INSTALL: MobileTestContext = { androidInstallState: 'freshInstall' };
 
 // Yes, multiple tests in one file!
 const reviewTriggers = [
@@ -65,7 +73,7 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
     allureDescription: `Verifies that the in-app review prompt shows after the user ${descriptionSnippet}`,
     testCb: async (platform: SupportedPlatformsType, testInfo: TestInfo) => {
       const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-        const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+        const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, FRESH_INSTALL);
         await newUser(device, USERNAME.ALICE, {
           saveUserData: false,
           allowNotificationPermissions: true, // The notification prompt can show twice if denied so we accept notifications

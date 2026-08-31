@@ -16,6 +16,14 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { MobileTestContext } from '../../utils/pro_context';
+
+/**
+ * The review prompt's Path and Theme triggers only qualify on a fresh install, and Appium always
+ * installs over an existing package — so without this the app reads as updated and those triggers never
+ * raise the prompt. iOS is unaffected and ignores the extra.
+ */
+const FRESH_INSTALL: MobileTestContext = { androidInstallState: 'freshInstall' };
 
 bothPlatformsIt({
   title: 'Review prompt positive flow',
@@ -33,7 +41,7 @@ bothPlatformsIt({
 async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const storevariant = platform === 'android' ? 'Google Play Store' : 'App Store';
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo, FRESH_INSTALL);
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });

@@ -153,6 +153,32 @@ export type ProTestHookContext = {
 export type ProContext = ProMockContext & ProTestHookContext;
 
 /**
+ * The half of the mobile test context only Android reads, and the mirror of {@link IOSOnlyContext} — the
+ * `android` prefix marks which side a field is currently on, and a field moves out of here the moment
+ * iOS can consume it.
+ */
+export type AndroidOnlyContext = {
+  /**
+   * How the package manager should report this install to the app (Android).
+   *
+   * The in-app review prompt only lets the Path and Theme triggers raise it on a fresh install; when
+   * updated, the Donate trigger is the only one that qualifies. The app derives that from
+   * `firstInstallTime != lastUpdateTime`, and Appium installs over an existing package, so a test
+   * device always reads as updated and those two triggers are unreachable without this.
+   *
+   * A state rather than iOS's install-date shape, and deliberately so: the comparison is against
+   * `lastUpdateTime`, which the harness can neither read nor set, so a date could only ever produce
+   * `updated` — the state that already happens by default. `useActual` restores the package manager's
+   * own answer.
+   *
+   * Applying it also clears the stored review state, since that state is what the flag feeds. The reset
+   * happens once, on the launch carrying the extra, so a spec asserting the prompt appears only once
+   * still holds across a relaunch.
+   */
+  androidInstallState?: 'freshInstall' | 'updated' | 'useActual';
+};
+
+/**
  * The half of the mobile test context only iOS reads.
  *
  * Kept beside `ProContext` rather than in `capabilities_ios` because the boundary between the two moves:
@@ -185,7 +211,7 @@ export type IOSOnlyContext = {
  * `openAndroidApp` as well as `openiOSApp`; Android reads the `ProContext` half as launch-intent extras
  * and ignores the rest.
  */
-export type MobileTestContext = ProContext & IOSOnlyContext;
+export type MobileTestContext = ProContext & IOSOnlyContext & AndroidOnlyContext;
 
 /**
  * A context per device, or one context for all of them.
