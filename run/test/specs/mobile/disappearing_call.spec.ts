@@ -9,6 +9,7 @@ import { SettingsModalsEnableButton } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { CALLS_PERMISSION_CONTEXT } from '../../utils/pro_context';
 import {
   getDisappearingTestTime,
   getDisappearingTestTiming,
@@ -49,6 +50,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
     platform,
     focusFriendsConvo: true,
     testInfo,
+    testContext: CALLS_PERMISSION_CONTEXT,
   });
   await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   await alice1.clickOnElementAll(new CallButton(alice1));
@@ -137,6 +139,7 @@ async function disappearingCallMessage1o1Android(
     platform,
     focusFriendsConvo: true,
     testInfo,
+    testContext: CALLS_PERMISSION_CONTEXT,
   });
   await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   await alice1.clickOnElementAll(new CallButton(alice1));

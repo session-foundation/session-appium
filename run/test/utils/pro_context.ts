@@ -246,6 +246,28 @@ export function contextForDevice(
 }
 
 /**
+ * A device the app should treat as a fresh install (Android).
+ *
+ * The review prompt's Path and Theme triggers only qualify on a fresh install, and Appium always installs
+ * over an existing package — so without this the app reads as updated and those two triggers can never
+ * raise the prompt. iOS ignores the extra.
+ *
+ * Shared rather than redeclared per spec: five specs need exactly this and they must agree, since the
+ * whole point is that the app's `firstInstallTime != lastUpdateTime` derivation is being overridden.
+ */
+export const FRESH_INSTALL_CONTEXT: MobileTestContext = { androidInstallState: 'freshInstall' };
+
+/**
+ * A device that has NOT been granted the notification permission (Android).
+ *
+ * The harness grants `POST_NOTIFICATIONS` up front everywhere else so Android's prompt cannot land
+ * mid-step and cover whatever a spec was doing. The calls specs are the exception: they assert the app's
+ * own "notifications are required for calls" modal, which the app has no reason to raise once the
+ * permission is already held. There the prompt IS the subject, so it has to be reachable.
+ */
+export const CALLS_PERMISSION_CONTEXT: MobileTestContext = { androidNotificationPermission: 'ask' };
+
+/**
  * Pro enabled, talking to the QA Pro backend when one is configured.
  *
  * The override belongs here rather than in individual specs because it must be on **every** device in a

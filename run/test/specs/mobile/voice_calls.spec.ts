@@ -8,6 +8,7 @@ import { CallButton, NotificationSwitch } from '../../locators/conversation';
 import { SettingsModalsEnableButton } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { CALLS_PERMISSION_CONTEXT } from '../../utils/pro_context';
 
 bothPlatformsItSeparate({
   title: 'Voice calls',
@@ -39,6 +40,7 @@ async function voiceCallIos(platform: SupportedPlatformsType, testInfo: TestInfo
       platform,
       focusFriendsConvo: true,
       testInfo,
+      testContext: CALLS_PERMISSION_CONTEXT,
     });
   });
   await test.step(TestSteps.CALLS.INITIATE_CALL(alice.userName), async () => {
@@ -156,6 +158,7 @@ async function voiceCallAndroid(platform: SupportedPlatformsType, testInfo: Test
       platform,
       focusFriendsConvo: true,
       testInfo,
+      testContext: CALLS_PERMISSION_CONTEXT,
     });
   });
   await test.step(TestSteps.CALLS.INITIATE_CALL(alice.userName), async () => {
