@@ -13,7 +13,7 @@ import {
   LongPressUnBan,
   MessageBody,
   MessageInput,
-  OutgoingMessageStatusSent,
+  OutgoingMessageStatusFailedToSend,
   SendButton,
 } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
@@ -103,10 +103,7 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
     await test.step('Verify Bob cannot send messages to community', async () => {
       await bob1.inputText(msg2, new MessageInput(bob1));
       await bob1.clickOnElementAll(new SendButton(bob1));
-      await bob1.verifyElementNotPresent({
-        ...new OutgoingMessageStatusSent(bob1).build(),
-        maxWait: 10_000,
-      });
+      await bob1.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(bob1));
       await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
     });
     await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
@@ -200,19 +197,13 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
           [bob1, bob2].map(async device => {
             await device.inputText(msg2, new MessageInput(device));
             await device.clickOnElementAll(new SendButton(device));
-            await device.verifyElementNotPresent({
-              ...new OutgoingMessageStatusSent(device).build(),
-              maxWait: 10_000,
-            });
+            await device.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(device));
           })
         );
       } else {
         await bob1.inputText(msg2, new MessageInput(bob1));
         await bob1.clickOnElementAll(new SendButton(bob1));
-        await bob1.verifyElementNotPresent({
-          ...new OutgoingMessageStatusSent(bob1).build(),
-          maxWait: 10_000,
-        });
+        await bob1.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(bob1));
         await bob2.waitForTextElementToBePresent({
           strategy: 'xpath',
           selector: `//XCUIElementTypeStaticText`,

@@ -12,7 +12,7 @@ import {
   LongPressUnBan,
   MessageBody,
   MessageInput,
-  OutgoingMessageStatusSent,
+  OutgoingMessageStatusFailedToSend,
   SendButton,
 } from '../../locators/conversation';
 import {
@@ -102,10 +102,7 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
     await test.step('Verify Bob cannot send messages in community', async () => {
       await bob1.inputText(msg2, new MessageInput(bob1));
       await bob1.clickOnElementAll(new SendButton(bob1));
-      await bob1.verifyElementNotPresent({
-        ...new OutgoingMessageStatusSent(bob1).build(),
-        maxWait: 10_000,
-      });
+      await bob1.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(bob1));
       await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
     });
     await test.step('Admin unbans Bob, Bob can send a third message', async () => {
@@ -185,10 +182,7 @@ async function banAndDelete(platform: SupportedPlatformsType, testInfo: TestInfo
     await test.step('Verify Bob cannot send messages in community', async () => {
       await bob1.inputText(msg2, new MessageInput(bob1));
       await bob1.clickOnElementAll(new SendButton(bob1));
-      await bob1.verifyElementNotPresent({
-        ...new OutgoingMessageStatusSent(bob1).build(),
-        maxWait: 10_000,
-      });
+      await bob1.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(bob1));
       await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
     });
   } finally {

@@ -766,6 +766,33 @@ export class NotificationSwitch extends LocatorsInterface {
   }
 }
 
+/**
+ * The status label of a message that could not be sent.
+ *
+ * Prefer this over asserting the ABSENCE of {@link OutgoingMessageStatusSent}: neither locator is tied to a
+ * particular message, and the two clients label a different message. iOS hides a sent message's status once
+ * it is no longer the last OUTGOING message, so a failed send leaves only its own label on screen. Android
+ * keeps it while it is the last SENT message (`VisibleMessageView.isLastSent`), so an earlier successful
+ * message goes on reading "Sent" beside the failed one, and an absence check can never pass there.
+ */
+export class OutgoingMessageStatusFailedToSend extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/messageStatusTextView',
+          text: tStripped('messageStatusFailedToSend'),
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: `Message sent status: Failed to send`,
+        } as const;
+    }
+  }
+}
+
 // TODO tie this to the message whose status we want to check (similar to EmojiReactsPill)
 export class OutgoingMessageStatusSent extends LocatorsInterface {
   public build() {
