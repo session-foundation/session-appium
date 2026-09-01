@@ -13,11 +13,16 @@ import {
   LongPressUnBan,
   MessageBody,
   MessageInput,
-  OutgoingMessageStatusSent,
+  OutgoingMessageStatusFailedToSend,
   SendButton,
 } from '../../locators/conversation';
 import { ConversationItem } from '../../locators/home';
-import { assertAdminIsKnown, joinCommunity, openOrJoinCommunity } from '../../utils/community';
+import {
+  assertAdminIsKnown,
+  joinCommunity,
+  leaveCommunity,
+  openOrJoinCommunity,
+} from '../../utils/community';
 import { newUser } from '../../utils/create_account';
 import { closeApp, openAppThreeDevices, SupportedPlatformsType } from '../../utils/open_app';
 import { restoreAccount } from '../../utils/restore_account';
@@ -78,51 +83,58 @@ async function banUnbanLinked(platform: SupportedPlatformsType, testInfo: TestIn
     await test.step('Restore admin account, create new account to be banned', async () => {
       return await Promise.all([restoreAccount(alice1, alice, 'alice1'), newUser(bob1, 'Bob')]);
     });
-  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    await openOrJoinCommunity(
-      alice1,
-      communities.testCommunity.link,
-      communities.testCommunity.name
-    );
-    await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
-  });
-  await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
-    await bob1.sendMessage(msg1);
-  });
-  await test.step('Admin bans Bob from community', async () => {
-    await alice1.longPressMessage(new MessageBody(alice1, msg1));
-    await alice1.clickOnElementAll(new LongPressBanUser(alice1));
-    await alice1.clickOnByAccessibilityID('Continue');
-  });
-  await test.step('Verify Bob cannot send messages to community', async () => {
-    await bob1.inputText(msg2, new MessageInput(bob1));
-    await bob1.clickOnElementAll(new SendButton(bob1));
-    await bob1.verifyElementNotPresent({
-      ...new OutgoingMessageStatusSent(bob1).build(),
-      maxWait: 10_000,
+  try {
+    await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
+      await openOrJoinCommunity(
+        alice1,
+        communities.testCommunity.link,
+        communities.testCommunity.name
+      );
+      await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
     });
-    await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
-  });
-  await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
-    await restoreAccount(bob2, bob, 'bob2');
-    await bob2.clickOnElementAll(new ConversationItem(bob2, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
-    await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
-    await bob2.onIOS().waitForTextElementToBePresent({
-      strategy: 'xpath',
-      selector: `//XCUIElementTypeStaticText`,
-      text: tStripped('permissionsWriteCommunity'),
+    await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
+      await bob1.sendMessage(msg1);
     });
-  });
-  await test.step('Admin unbans Bob, Bob can send a third message from both devices', async () => {
-    await alice1.longPressMessage(new MessageBody(alice1, msg1));
-    await alice1.clickOnElementAll(new LongPressUnBan(alice1));
-    await alice1.clickOnByAccessibilityID('Continue');
-    await Promise.all([bob1.sendMessage(msg3), bob2.sendMessage(msg3Linked)]);
-    await Promise.all([
-      alice1.waitForTextElementToBePresent(new MessageBody(alice1, msg3)),
-      alice1.waitForTextElementToBePresent(new MessageBody(alice1, msg3Linked)),
-    ]);
-  });
+    await test.step('Admin bans Bob from community', async () => {
+      await alice1.longPressMessage(new MessageBody(alice1, msg1));
+      await alice1.clickOnElementAll(new LongPressBanUser(alice1));
+      await alice1.clickOnByAccessibilityID('Continue');
+    });
+    await test.step('Verify Bob cannot send messages to community', async () => {
+      await bob1.inputText(msg2, new MessageInput(bob1));
+      await bob1.clickOnElementAll(new SendButton(bob1));
+      await bob1.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(bob1));
+      await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
+    });
+    await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
+      await restoreAccount(bob2, bob, 'bob2');
+      await bob2.clickOnElementAll(new ConversationItem(bob2, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
+      await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
+      await bob2.onIOS().waitForTextElementToBePresent({
+        strategy: 'xpath',
+        selector: `//XCUIElementTypeStaticText`,
+        text: tStripped('permissionsWriteCommunity'),
+      });
+    });
+    await test.step('Admin unbans Bob, Bob can send a third message from both devices', async () => {
+      await alice1.longPressMessage(new MessageBody(alice1, msg1));
+      await alice1.clickOnElementAll(new LongPressUnBan(alice1));
+      await alice1.clickOnByAccessibilityID('Continue');
+      await Promise.all([bob1.sendMessage(msg3), bob2.sendMessage(msg3Linked)]);
+      await Promise.all([
+        alice1.waitForTextElementToBePresent(new MessageBody(alice1, msg3)),
+        alice1.waitForTextElementToBePresent(new MessageBody(alice1, msg3Linked)),
+      ]);
+    });
+  } finally {
+    // In a finally rather than a step: Playwright abandons remaining steps once a test fails, so a
+    // step-based leave ran only on PASSING tests - the exact inverse of what is needed. It is the FAILED
+    // test whose community stays in the shared admin's config, and one dead room there holds that server's
+    // poller at its 30s retry cap on the next run, which turned a single failure into a permanent
+    // alternating one. Before `closeApp`, because it drives the UI.
+    await leaveCommunity(alice1, communities.testCommunity.name);
+  }
+
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1, bob2);
   });
@@ -151,60 +163,66 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
     await test.step('Restore admin account, create new account to be banned', async () => {
       return await Promise.all([restoreAccount(alice1, alice, 'alice1'), newUser(bob1, 'Bob')]);
     });
-  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    await openOrJoinCommunity(
-      alice1,
-      communities.testCommunity.link,
-      communities.testCommunity.name
-    );
-    await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
-  });
-  await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
-    await bob1.sendMessage(msg1);
-  });
-  await test.step('Admin bans Bob and deletes all from community', async () => {
-    await alice1.longPressMessage(new MessageBody(alice1, msg1));
-    await alice1.clickOnElementAll(new LongPressBanAndDelete(alice1));
-    await alice1.clickOnByAccessibilityID('Continue');
-  });
-  await test.step(`Verify Bob's first message has been deleted`, async () => {
-    await alice1.verifyElementNotPresent({
-      ...new MessageBody(alice1, msg1).build(),
-      maxWait: 5_000,
-    });
-  });
-  await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
-    await restoreAccount(bob2, bob, 'bob2');
-    await bob2.clickOnElementAll(new ConversationItem(bob2, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
-    await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
-  });
-  await test.step('Verify Bob cannot send messages in community on either device', async () => {
-    if (platform === 'android') {
-      await Promise.all(
-        [bob1, bob2].map(async device => {
-          await device.inputText(msg2, new MessageInput(device));
-          await device.clickOnElementAll(new SendButton(device));
-          await device.verifyElementNotPresent({
-            ...new OutgoingMessageStatusSent(device).build(),
-            maxWait: 10_000,
-          });
-        })
+  try {
+    await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
+      await openOrJoinCommunity(
+        alice1,
+        communities.testCommunity.link,
+        communities.testCommunity.name
       );
-    } else {
-      await bob1.inputText(msg2, new MessageInput(bob1));
-      await bob1.clickOnElementAll(new SendButton(bob1));
-      await bob1.verifyElementNotPresent({
-        ...new OutgoingMessageStatusSent(bob1).build(),
-        maxWait: 10_000,
+      await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
+    });
+    await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
+      await bob1.sendMessage(msg1);
+    });
+    await test.step('Admin bans Bob and deletes all from community', async () => {
+      await alice1.longPressMessage(new MessageBody(alice1, msg1));
+      await alice1.clickOnElementAll(new LongPressBanAndDelete(alice1));
+      await alice1.clickOnByAccessibilityID('Continue');
+    });
+    await test.step(`Verify Bob's first message has been deleted`, async () => {
+      await alice1.verifyElementNotPresent({
+        ...new MessageBody(alice1, msg1).build(),
+        maxWait: 5_000,
       });
-      await bob2.waitForTextElementToBePresent({
-        strategy: 'xpath',
-        selector: `//XCUIElementTypeStaticText`,
-        text: tStripped('permissionsWriteCommunity'),
-      });
-    }
-    await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
-  });
+    });
+    await test.step(TestSteps.SETUP.RESTORE_ACCOUNT('Bob'), async () => {
+      await restoreAccount(bob2, bob, 'bob2');
+      await bob2.clickOnElementAll(new ConversationItem(bob2, communities.testCommunity.roomName)); // Since we're banned we don't get the "real" name
+      await bob2.waitForTextElementToBePresent(new EmptyConversation(bob2));
+    });
+    await test.step('Verify Bob cannot send messages in community on either device', async () => {
+      if (platform === 'android') {
+        await Promise.all(
+          [bob1, bob2].map(async device => {
+            await device.inputText(msg2, new MessageInput(device));
+            await device.clickOnElementAll(new SendButton(device));
+            await device.waitForTextElementToBePresent(
+              new OutgoingMessageStatusFailedToSend(device)
+            );
+          })
+        );
+      } else {
+        await bob1.inputText(msg2, new MessageInput(bob1));
+        await bob1.clickOnElementAll(new SendButton(bob1));
+        await bob1.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(bob1));
+        await bob2.waitForTextElementToBePresent({
+          strategy: 'xpath',
+          selector: `//XCUIElementTypeStaticText`,
+          text: tStripped('permissionsWriteCommunity'),
+        });
+      }
+      await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
+    });
+  } finally {
+    // In a finally rather than a step: Playwright abandons remaining steps once a test fails, so a
+    // step-based leave ran only on PASSING tests - the exact inverse of what is needed. It is the FAILED
+    // test whose community stays in the shared admin's config, and one dead room there holds that server's
+    // poller at its 30s retry cap on the next run, which turned a single failure into a permanent
+    // alternating one. Before `closeApp`, because it drives the UI.
+    await leaveCommunity(alice1, communities.testCommunity.name);
+  }
+
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1, bob2);
   });

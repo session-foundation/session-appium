@@ -16,6 +16,8 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { FRESH_INSTALL_CONTEXT } from '../../utils/pro_context';
+import { returnHomeFromPath } from '../../utils/review_prompt';
 
 bothPlatformsIt({
   title: 'Review prompt positive flow',
@@ -33,15 +35,18 @@ bothPlatformsIt({
 async function reviewPromptPositive(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const storevariant = platform === 'android' ? 'Google Play Store' : 'App Store';
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    const { device } = await openAppOnPlatformSingleDevice(
+      platform,
+      testInfo,
+      FRESH_INSTALL_CONTEXT
+    );
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
   await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new UserSettings(device));
     await device.clickOnElementAll(new PathMenuItem(device));
-    await device.back();
-    await device.back();
+    await returnHomeFromPath(device);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Enjoying Session'), async () => {
     await device.checkModalStrings(

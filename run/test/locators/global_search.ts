@@ -29,9 +29,13 @@ export class NoteToSelfOption extends LocatorsInterface {
           text: 'Note to Self',
         };
       case 'ios':
+        // The row carries `pro-badge-text` as its identifier, which takes over the element's `name`, so
+        // the conversation name it displays is reachable only on `label` — the same shape Android
+        // matches, differing only in which attribute exposes the text.
         return {
           strategy: 'accessibility id',
-          selector: 'Note to Self',
+          selector: 'pro-badge-text',
+          label: 'Note to Self',
         };
     }
   }

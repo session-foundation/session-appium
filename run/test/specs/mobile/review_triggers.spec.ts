@@ -19,6 +19,8 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { FRESH_INSTALL_CONTEXT } from '../../utils/pro_context';
+import { returnHomeFromSettings } from '../../utils/review_prompt';
 
 // Yes, multiple tests in one file!
 const reviewTriggers = [
@@ -65,7 +67,11 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
     allureDescription: `Verifies that the in-app review prompt shows after the user ${descriptionSnippet}`,
     testCb: async (platform: SupportedPlatformsType, testInfo: TestInfo) => {
       const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-        const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+        const { device } = await openAppOnPlatformSingleDevice(
+          platform,
+          testInfo,
+          FRESH_INSTALL_CONTEXT
+        );
         await newUser(device, USERNAME.ALICE, {
           saveUserData: false,
           allowNotificationPermissions: true, // The notification prompt can show twice if denied so we accept notifications
@@ -75,7 +81,10 @@ for (const { titleSnippet, descriptionSnippet, testStepName, trigger } of review
       await test.step(testStepName, async () => {
         await device.clickOnElementAll(new UserSettings(device));
         await trigger(device);
-        await device.back();
+        // Every trigger ends back on Settings, and this last back is what reaches the home screen the
+        // prompt renders over. Issued blind it races the trigger's own transition — worst for
+        // Appearance, whose theme change rebuilds the UI underneath it.
+        await returnHomeFromSettings(device);
       });
       await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('App Review'), async () => {
         await device.checkModalStrings(

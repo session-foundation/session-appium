@@ -2,7 +2,7 @@ import { test, type TestInfo } from '@playwright/test';
 
 import { TestSteps } from '../../../types/allure';
 import { androidIt } from '../../../types/sessionIt';
-import { open_Alice1_Bob1_friends } from '../../state_builder';
+import { open_Alice1_Bob0_friends } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { verifyPageScreenshot } from '../../utils/verify_screenshots';
 
@@ -10,19 +10,14 @@ androidIt({
   title: 'User Profile Modal Home Screen',
   risk: 'high',
   testCb: upmHomeScreen,
-  countOfDevicesNeeded: 2,
+  countOfDevicesNeeded: 1,
 });
 
 async function upmHomeScreen(platform: SupportedPlatformsType, testInfo: TestInfo) {
-  const {
-    devices: { alice1, bob1 },
-    prebuilt: { bob },
-  } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
-    return open_Alice1_Bob1_friends({
-      platform,
-      focusFriendsConvo: false,
-      testInfo,
-    });
+  // Bob is seeded as a contact but gets no device: the spec only needs his conversation to exist on
+  // Alice's home screen, and it never drives an app as him.
+  const { device: alice1, bob } = await test.step(TestSteps.SETUP.QA_SEEDER, async () => {
+    return open_Alice1_Bob0_friends({ platform, testInfo });
   });
   await test.step('Open User Profile Modal on home screen', async () => {
     await alice1.longPressConversation(bob.userName);
@@ -56,6 +51,6 @@ async function upmHomeScreen(platform: SupportedPlatformsType, testInfo: TestInf
     }
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
-    await closeApp(alice1, bob1);
+    await closeApp(alice1);
   });
 }

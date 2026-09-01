@@ -16,6 +16,9 @@ import {
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { checkOpenUrlDialogStrings } from '../../utils/open_url_dialog';
+import { FRESH_INSTALL_CONTEXT } from '../../utils/pro_context';
+import { returnHomeFromPath } from '../../utils/review_prompt';
 import { assertUrlIsReachable } from '../../utils/utilities';
 
 bothPlatformsIt({
@@ -33,7 +36,11 @@ bothPlatformsIt({
 
 async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: TestInfo) {
   const { device } = await test.step(TestSteps.SETUP.NEW_USER, async () => {
-    const { device } = await openAppOnPlatformSingleDevice(platform, testInfo);
+    const { device } = await openAppOnPlatformSingleDevice(
+      platform,
+      testInfo,
+      FRESH_INSTALL_CONTEXT
+    );
     await newUser(device, USERNAME.ALICE, { saveUserData: false });
     return { device };
   });
@@ -44,8 +51,7 @@ async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: 
 
   await test.step(TestSteps.OPEN.PATH, async () => {
     await device.clickOnElementAll(new PathMenuItem(device));
-    await device.back();
-    await device.back();
+    await returnHomeFromPath(device);
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Enjoying Session'), async () => {
     await device.checkModalStrings(
@@ -60,7 +66,7 @@ async function reviewPromptNegative(platform: SupportedPlatformsType, testInfo: 
     await device.clickOnElementAll(new ReviewPromptOpenSurveyButton(device));
   });
   await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Open URL'), async () => {
-    await device.checkModalStrings(tStripped('urlOpen'), tStripped('urlOpenDescription', { url }));
+    await checkOpenUrlDialogStrings(device, url);
     await assertUrlIsReachable(url);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

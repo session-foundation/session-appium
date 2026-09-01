@@ -7,6 +7,7 @@
     "create-emulators": "npx ts-node scripts/create_android_emulators.ts",
     "build-wda": "npx ts-node scripts/build_wda.ts",
     "recover-emulators": "npx ts-node scripts/emulator_health.ts",
+    "recycle-emulators": "npx ts-node scripts/emulator_health.ts --force",
     "setup-virtual-scene": "npx ts-node scripts/setup_virtual_scene.ts",
     "lint": "pnpm prettier . --write --cache && pnpm eslint . --cache ",
     "lint-check": "pnpm prettier . --check && pnpm eslint .",

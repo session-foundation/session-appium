@@ -38,6 +38,11 @@ async function sendLongMessageGroup(platform: SupportedPlatformsType, testInfo: 
   const replyMessage = await bob1.replyToMessage(alice, longText);
   await Promise.all(
     [alice1, charlie1].map(async device => {
+      // A reply quoting `longText` is taller than the viewport, so on a device that was not already at
+      // the bottom it lands below the fold. Android lays it out with an inverted rect (top below bottom)
+      // and reports `displayed=false`, and the wait below requires a visible element — so the message
+      // arrives, is in the hierarchy with the right text, and still never matches.
+      await device.scrollToBottom();
       await device.waitForTextElementToBePresent(new MessageBody(device, replyMessage));
     })
   );

@@ -12,10 +12,15 @@ import {
   LongPressUnBan,
   MessageBody,
   MessageInput,
-  OutgoingMessageStatusSent,
+  OutgoingMessageStatusFailedToSend,
   SendButton,
 } from '../../locators/conversation';
-import { assertAdminIsKnown, joinCommunity, openOrJoinCommunity } from '../../utils/community';
+import {
+  assertAdminIsKnown,
+  joinCommunity,
+  leaveCommunity,
+  openOrJoinCommunity,
+} from '../../utils/community';
 import { newUser } from '../../utils/create_account';
 import { closeApp, openAppTwoDevices, SupportedPlatformsType } from '../../utils/open_app';
 import { restoreAccount } from '../../utils/restore_account';
@@ -71,50 +76,57 @@ async function banUserCommunity(platform: SupportedPlatformsType, testInfo: Test
         newUser(bob1, 'Bob', { saveUserData: false }),
       ]);
     });
-  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    await openOrJoinCommunity(
-      alice1,
-      communities.testCommunity.link,
-      communities.testCommunity.name
-    );
-    await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
-  });
-  await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
-    await bob1.sendMessage(msg1);
-  });
-  await test.step('Admin bans Bob from community', async () => {
-    await alice1.longPressMessage(new MessageBody(alice1, msg1));
-    await alice1.clickOnElementAll(new LongPressBanUser(alice1));
-    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Ban User'), async () => {
-      await alice1.checkModalStrings(
-        tStripped('banUser'),
-        tStripped('communityBanUserDescription', { name: bob.userName })
+  try {
+    await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
+      await openOrJoinCommunity(
+        alice1,
+        communities.testCommunity.link,
+        communities.testCommunity.name
       );
+      await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
     });
-    await alice1.clickOnByAccessibilityID('Continue');
-  });
-  await test.step('Verify Bob cannot send messages in community', async () => {
-    await bob1.inputText(msg2, new MessageInput(bob1));
-    await bob1.clickOnElementAll(new SendButton(bob1));
-    await bob1.verifyElementNotPresent({
-      ...new OutgoingMessageStatusSent(bob1).build(),
-      maxWait: 10_000,
+    await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
+      await bob1.sendMessage(msg1);
     });
-    await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
-  });
-  await test.step('Admin unbans Bob, Bob can send a third message', async () => {
-    await alice1.longPressMessage(new MessageBody(alice1, msg1));
-    await alice1.clickOnElementAll(new LongPressUnBan(alice1));
-    await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Unban User'), async () => {
-      await alice1.checkModalStrings(
-        tStripped('banUnbanUser'),
-        tStripped('communityUnbanUserDescription', { name: bob.userName })
-      );
+    await test.step('Admin bans Bob from community', async () => {
+      await alice1.longPressMessage(new MessageBody(alice1, msg1));
+      await alice1.clickOnElementAll(new LongPressBanUser(alice1));
+      await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Ban User'), async () => {
+        await alice1.checkModalStrings(
+          tStripped('banUser'),
+          tStripped('communityBanUserDescription', { name: bob.userName })
+        );
+      });
+      await alice1.clickOnByAccessibilityID('Continue');
     });
-    await alice1.clickOnByAccessibilityID('Continue');
-    await bob1.sendMessage(msg3);
-    await alice1.waitForTextElementToBePresent(new MessageBody(alice1, msg3));
-  });
+    await test.step('Verify Bob cannot send messages in community', async () => {
+      await bob1.inputText(msg2, new MessageInput(bob1));
+      await bob1.clickOnElementAll(new SendButton(bob1));
+      await bob1.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(bob1));
+      await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
+    });
+    await test.step('Admin unbans Bob, Bob can send a third message', async () => {
+      await alice1.longPressMessage(new MessageBody(alice1, msg1));
+      await alice1.clickOnElementAll(new LongPressUnBan(alice1));
+      await test.step(TestSteps.VERIFY.SPECIFIC_MODAL('Unban User'), async () => {
+        await alice1.checkModalStrings(
+          tStripped('banUnbanUser'),
+          tStripped('communityUnbanUserDescription', { name: bob.userName })
+        );
+      });
+      await alice1.clickOnByAccessibilityID('Continue');
+      await bob1.sendMessage(msg3);
+      await alice1.waitForTextElementToBePresent(new MessageBody(alice1, msg3));
+    });
+  } finally {
+    // In a finally rather than a step: Playwright abandons remaining steps once a test fails, so a
+    // step-based leave ran only on PASSING tests - the exact inverse of what is needed. It is the FAILED
+    // test whose community stays in the shared admin's config, and one dead room there holds that server's
+    // poller at its 30s retry cap on the next run, which turned a single failure into a permanent
+    // alternating one. Before `closeApp`, because it drives the UI.
+    await leaveCommunity(alice1, communities.testCommunity.name);
+  }
+
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);
   });
@@ -140,41 +152,48 @@ async function banAndDelete(platform: SupportedPlatformsType, testInfo: TestInfo
       newUser(bob1, 'Bob', { saveUserData: false }),
     ]);
   });
-  await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
-    await openOrJoinCommunity(
-      alice1,
-      communities.testCommunity.link,
-      communities.testCommunity.name
-    );
-    await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
-  });
-  await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
-    await bob1.sendMessage(msg1);
-  });
-  await test.step('Admin bans Bob and deletes all from community', async () => {
-    await alice1.longPressMessage(new MessageBody(alice1, msg1));
-    await alice1.clickOnElementAll(new LongPressBanAndDelete(alice1));
-    await alice1.checkModalStrings(
-      tStripped('banDeleteAll'),
-      tStripped('communityBanDeleteDescription')
-    );
-    await alice1.clickOnByAccessibilityID('Continue');
-  });
-  await test.step(`Verify Bob's first message has been deleted`, async () => {
-    await alice1.verifyElementNotPresent({
-      ...new MessageBody(alice1, msg1).build(),
-      maxWait: 5_000,
+  try {
+    await test.step(TestSteps.NEW_CONVERSATION.JOIN_COMMUNITY, async () => {
+      await openOrJoinCommunity(
+        alice1,
+        communities.testCommunity.link,
+        communities.testCommunity.name
+      );
+      await joinCommunity(bob1, communities.testCommunity.link, communities.testCommunity.name);
     });
-  });
-  await test.step('Verify Bob cannot send messages in community', async () => {
-    await bob1.inputText(msg2, new MessageInput(bob1));
-    await bob1.clickOnElementAll(new SendButton(bob1));
-    await bob1.verifyElementNotPresent({
-      ...new OutgoingMessageStatusSent(bob1).build(),
-      maxWait: 10_000,
+    await test.step(TestSteps.SEND.MESSAGE('Bob', 'community'), async () => {
+      await bob1.sendMessage(msg1);
     });
-    await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
-  });
+    await test.step('Admin bans Bob and deletes all from community', async () => {
+      await alice1.longPressMessage(new MessageBody(alice1, msg1));
+      await alice1.clickOnElementAll(new LongPressBanAndDelete(alice1));
+      await alice1.checkModalStrings(
+        tStripped('banDeleteAll'),
+        tStripped('communityBanDeleteDescription')
+      );
+      await alice1.clickOnByAccessibilityID('Continue');
+    });
+    await test.step(`Verify Bob's first message has been deleted`, async () => {
+      await alice1.verifyElementNotPresent({
+        ...new MessageBody(alice1, msg1).build(),
+        maxWait: 5_000,
+      });
+    });
+    await test.step('Verify Bob cannot send messages in community', async () => {
+      await bob1.inputText(msg2, new MessageInput(bob1));
+      await bob1.clickOnElementAll(new SendButton(bob1));
+      await bob1.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(bob1));
+      await alice1.verifyElementNotPresent(new MessageBody(alice1, msg2));
+    });
+  } finally {
+    // In a finally rather than a step: Playwright abandons remaining steps once a test fails, so a
+    // step-based leave ran only on PASSING tests - the exact inverse of what is needed. It is the FAILED
+    // test whose community stays in the shared admin's config, and one dead room there holds that server's
+    // poller at its 30s retry cap on the next run, which turned a single failure into a permanent
+    // alternating one. Before `closeApp`, because it drives the UI.
+    await leaveCommunity(alice1, communities.testCommunity.name);
+  }
+
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
     await closeApp(alice1, bob1);
   });

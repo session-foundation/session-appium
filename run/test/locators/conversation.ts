@@ -224,6 +224,7 @@ export class DeleteConversationModalConfirm extends LocatorsInterface {
     }
   }
 }
+
 export class DeletedMessage extends LocatorsInterface {
   public build() {
     return {
@@ -270,7 +271,6 @@ export class EditNicknameButton extends LocatorsInterface {
     }
   }
 }
-
 export class EmojiReactsCount extends LocatorsInterface {
   constructor(
     device: DeviceWrapper,
@@ -418,6 +418,41 @@ export class ImagesFolderButton extends LocatorsInterface {
       strategy: 'accessibility id',
       selector: 'Images folder',
     } as const;
+  }
+}
+
+/** The confirmation for {@link LeaveCommunityMenuItem}. */
+export class LeaveCommunityConfirm extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'leave-community-confirm-option' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'Leave' } as const;
+    }
+  }
+}
+
+/**
+ * "Leave Community" in Conversation Settings, and its confirmation.
+ *
+ * Leaving is what removes the community from the account's user-groups config. That matters beyond the
+ * feature itself: a community left in an account's config after its room is deleted server-side keeps
+ * failing to poll, and because failure is counted per POLL rather than per room, one dead room holds that
+ * whole server's poller at its 30s retry cap — starving the live communities on it. The suite's SOGS admin
+ * had accumulated 27 such rooms, which is what made `Ban and unban user in community` fail.
+ *
+ * iOS's action is `deleteOrLeave(type: .deleteCommunityAndContent)`; its confirm button is the shared
+ * `ConfirmationModal`, whose title here is `"leave".localized()`.
+ */
+export class LeaveCommunityMenuItem extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return { strategy: 'id', selector: 'leave-community-menu-option' } as const;
+      case 'ios':
+        return { strategy: 'accessibility id', selector: 'Leave Community' } as const;
+    }
   }
 }
 export class LongPressBanAndDelete extends LocatorsInterface {
@@ -727,6 +762,33 @@ export class NotificationSwitch extends LocatorsInterface {
         } as const;
       case 'ios':
         throw new Error('Platform not supported');
+    }
+  }
+}
+
+/**
+ * The status label of a message that could not be sent.
+ *
+ * Prefer this over asserting the ABSENCE of {@link OutgoingMessageStatusSent}: neither locator is tied to a
+ * particular message, and the two clients label a different message. iOS hides a sent message's status once
+ * it is no longer the last OUTGOING message, so a failed send leaves only its own label on screen. Android
+ * keeps it while it is the last SENT message (`VisibleMessageView.isLastSent`), so an earlier successful
+ * message goes on reading "Sent" beside the failed one, and an absence check can never pass there.
+ */
+export class OutgoingMessageStatusFailedToSend extends LocatorsInterface {
+  public build() {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/messageStatusTextView',
+          text: tStripped('messageStatusFailedToSend'),
+        } as const;
+      case 'ios':
+        return {
+          strategy: 'accessibility id',
+          selector: `Message sent status: Failed to send`,
+        } as const;
     }
   }
 }

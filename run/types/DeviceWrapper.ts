@@ -6,9 +6,11 @@ import { TestInfo } from '@playwright/test';
 import { AndroidUiautomator2Driver } from 'appium-uiautomator2-driver';
 import { W3CUiautomator2DriverCaps } from 'appium-uiautomator2-driver/build/lib/types';
 import { W3CXCUITestDriverCaps, XCUITestDriver } from 'appium-xcuitest-driver/build/lib/driver';
+import { createHash } from 'crypto';
 import fs from 'fs/promises';
 import Fuse from 'fuse.js';
 import { isArray, isEmpty } from 'lodash';
+import * as os from 'os';
 import * as path from 'path';
 import sharp from 'sharp';
 import * as sinon from 'sinon';
@@ -212,6 +214,13 @@ function applicationDimension(source: string, attr: 'height' | 'width'): number 
   return Number(value);
 }
 
+/**
+ * The largest poster texture the emulator's virtual scene will draw. Above it the scene draws nothing at
+ * all and the emulator console still reports `OK`, so an oversized image looks exactly like an injection
+ * that never happened.
+ */
+const SCENE_POSTER_MAX_PX = 500;
+
 export class DeviceWrapper implements IMobileWrapper {
   private readonly device: AndroidUiautomator2Driver | XCUITestDriver;
   public readonly udid: string;
@@ -404,14 +413,65 @@ export class DeviceWrapper implements IMobileWrapper {
   /**
    * Injects a base64-encoded image into the Android emulator's virtual camera scene.
    */
+  /**
+   * Show an image on the emulator's virtual-scene poster, which is what its camera then sees.
+   *
+   * The image is resized to {@link SCENE_POSTER_MAX_PX} and forced to RGBA first, because the scene
+   * silently refuses anything else and the emulator console reports `OK` either way. Measured against
+   * the poster directly: a 954x954 RGBA texture is not drawn at all — the camera shows the room behind
+   * it, which reads as "the injection never happened" — while the same image at 500x500 renders. An
+   * image without an alpha channel is drawn as solid black.
+   */
   public async injectImageToScene(base64Image: string): Promise<void> {
     if (this.isAndroid()) {
-      await this.toShared().execute('mobile: injectEmulatorCameraImage', {
-        payload: base64Image,
-      });
+      const payload = (
+        await sharp(Buffer.from(base64Image, 'base64'))
+          .resize(SCENE_POSTER_MAX_PX, SCENE_POSTER_MAX_PX, { fit: 'contain', background: 'white' })
+          .flatten({ background: 'white' })
+          .ensureAlpha()
+          .png()
+          .toBuffer()
+      ).toString('base64');
+      // Driven through the emulator console rather than `mobile: injectEmulatorCameraImage`. The driver
+      // command reports success and leaves the poster undrawn, while the same bytes sent by this route
+      // render — verified against the poster directly on more than one emulator.
+      // Named by content, not by device. The emulator caches the poster texture against the file path,
+      // so reusing one path silently keeps the first image every later run is compared against — a scan
+      // then decodes a PREVIOUS run's code and the failure names the wrong account rather than the cache.
+      const posterHash = createHash('sha1').update(payload).digest('hex').slice(0, 16);
+      const posterPath = path.join(os.tmpdir(), `scene-poster-${posterHash}.png`);
+      await fs.writeFile(posterPath, Buffer.from(payload, 'base64'));
+
+      await runScriptAndLog(
+        `${getAdbFullPath()} -s ${this.getUdid()} emu virtualscene-image table ${posterPath}`,
+        true
+      );
       this.log(`Injected image to scene`);
     }
     // iOS: no-op
+  }
+
+  /**
+   * Keep the scene showing `base64Image` until `hasLanded` reports the app has acted on it.
+   *
+   * Two things make a single send unreliable, and both are invisible from here: a poster handed to a
+   * scene whose camera has just started is drawn as a solid black panel, and the previous run's poster
+   * survives in a still-running emulator, so a scanner can decode a stale code before a new one arrives.
+   * Re-sending until the caller's own condition holds covers both without guessing at a delay, and stops
+   * immediately once it does.
+   */
+  public async injectImageToSceneUntil(
+    base64Image: string,
+    hasLanded: () => Promise<boolean>,
+    attempts: number = 8
+  ): Promise<void> {
+    for (let attempt = 0; attempt < attempts; attempt++) {
+      await this.injectImageToScene(base64Image);
+      if (await hasLanded()) {
+        return;
+      }
+    }
+    this.info(`The scene still has not shown the injected image after ${attempts} attempts`);
   }
 
   /* === all the device-specific function ===  */
@@ -1166,6 +1226,22 @@ export class DeviceWrapper implements IMobileWrapper {
       const value = await this.getAttribute('label', element.ELEMENT).catch(() => null);
       return Boolean(value && normalize(value) === normalize(labelToLookFor));
     });
+
+    if (!matching) {
+      // A label mismatch otherwise reports only that the element was not found, which reads as a wrong
+      // locator rather than as copy that differs by a character. Both sides are logged normalised, so
+      // what is compared is what is shown.
+      const seen = await Promise.all(
+        elements.map(element => this.getAttribute('label', element.ELEMENT).catch(() => null))
+      );
+      this.log(
+        `No label matched. Wanted: "${normalize(labelToLookFor)}". Saw: ` +
+          seen
+            .filter((value): value is string => Boolean(value))
+            .map(value => `"${normalize(value)}"`)
+            .join(', ')
+      );
+    }
 
     return matching || null;
   }
@@ -1946,6 +2022,15 @@ export class DeviceWrapper implements IMobileWrapper {
   }
   // UTILITY FUNCTIONS
 
+  /**
+   * Stamped at the send action, not at the sent tick below.
+   *
+   * Callers hand this to `hasElementDisappeared` as the moment the message's timer started, and that
+   * check rejects a lifetime under 0.8x the timer as a product bug. The tick is only when Appium first
+   * observes the send, so any delay in observing it is subtracted from the measured lifetime: on
+   * devnet's 10s timer, two seconds of lag is enough to report a correct run as a bug. Reading it early
+   * can only overstate the lifetime, and nothing checks for that.
+   */
   public async sendMessage(message: string): Promise<number> {
     await this.inputText(message, new MessageInput(this));
 
@@ -1955,12 +2040,12 @@ export class DeviceWrapper implements IMobileWrapper {
     if (!sendButton) {
       throw new Error('Send button not found: Need to restart iOS emulator: Known issue');
     }
+    const sentTimestamp = Date.now();
     // Wait for tick
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 50000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -1972,8 +2057,10 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.clickOnElementAll(new NewMessageOption(this));
     // Enter User B's session ID into input box
     await this.inputText(user.sessionId, new EnterAccountID(this));
-    // Click next
-    await this.scrollDown();
+    // The keyboard covers Next on smaller screens, so it has to go — but by asking the driver, not by
+    // scrolling. This is a bottom sheet: a swipe drags the sheet itself, and the tap that follows lands
+    // on nothing, leaving the Account ID entered and Next untouched.
+    await this.hideKeyboard();
     await this.clickOnElementAll(new NextButton(this));
     // Type message into message input box
 
@@ -2215,6 +2302,7 @@ export class DeviceWrapper implements IMobileWrapper {
     }
     await this.inputText(message, new MessageInput(this));
     await this.clickOnElementAll(new SendButton(this));
+    const sentTimestamp = Date.now();
     if (community) {
       await this.scrollToBottom();
     }
@@ -2222,7 +2310,6 @@ export class DeviceWrapper implements IMobileWrapper {
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
   public async sendVideoiOS(message: string): Promise<number> {
@@ -2236,12 +2323,11 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.waitForTextElementToBePresent({ strategy: 'accessibility id', selector: 'Recents' });
     // A video can't be matched by its thumbnail so we use a video thumbnail file
     await this.matchAndTapImage({ type: 'XCUIElementTypeCell' }, testVideoThumbnail);
-    await this.sendMessage(message);
+    const sentTimestamp = await this.sendMessage(message);
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -2295,11 +2381,11 @@ export class DeviceWrapper implements IMobileWrapper {
     } else {
       throw new Error(`Video "${testVideo}" not found after attempting to reveal it.`);
     }
+    const sentTimestamp = Date.now();
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -2398,12 +2484,12 @@ export class DeviceWrapper implements IMobileWrapper {
     if (this.isIOS()) {
       await this.clickOnElementAll(new SendButton(this));
     }
+    const sentTimestamp = Date.now();
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -2422,12 +2508,12 @@ export class DeviceWrapper implements IMobileWrapper {
     }
 
     await this.pressAndHold('New voice message');
+    const sentTimestamp = Date.now();
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
       maxWait: 20000,
     });
-    const sentTimestamp = Date.now();
     return sentTimestamp;
   }
 
@@ -2586,6 +2672,22 @@ export class DeviceWrapper implements IMobileWrapper {
     // let some time for swipe action to happen and UI to update
   }
 
+  /** Whether a soft keyboard is currently on screen. */
+  public async isKeyboardShown(): Promise<boolean> {
+    if (this.isIOS()) {
+      return (
+        (await this.doesElementExist({
+          strategy: 'class name',
+          selector: 'XCUIElementTypeKeyboard',
+          maxWait: 500,
+        })) !== null
+      );
+    }
+    return this.toShared()
+      .isKeyboardShown()
+      .catch(() => false);
+  }
+
   /**
    * Dismisses the soft keyboard if one is up, so a control it was covering becomes tappable.
    *
@@ -2595,14 +2697,47 @@ export class DeviceWrapper implements IMobileWrapper {
    * throws nothing) while the tap lands outside its clickable region. That failure is silent: no
    * error, no navigation, nothing in the device log.
    *
-   * Best-effort by design. Both drivers throw if asked to hide a keyboard that isn't showing, and
-   * "there was no keyboard to dismiss" is the desired end state rather than a failure.
+   * **`mobile: hideKeyboard` is not enough on iOS.** It throws for two different reasons — there was no
+   * keyboard, and there is one the driver has no affordance to dismiss (a plain text field offers it no
+   * Done key) — and treating both as success means a keyboard that is still up reports as dismissed.
+   * So the outcome is checked rather than assumed, and a tap outside the input is the fallback: that is
+   * what dismisses this one, and it is inert on a screen with nothing under it.
    */
-  public async hideKeyboard(): Promise<void> {
+  /**
+   * Best-effort. `mobile: hideKeyboard` throws both when there was no keyboard and when there is one the
+   * driver has no affordance to dismiss — a plain message input is the second — so the outcome is checked
+   * rather than taken from the call returning.
+   *
+   * `tapOutsideTheInput` adds a tap in the middle of the screen for the case the driver cannot handle.
+   * Only a caller that knows what occupies that point should ask for it: on a bottom sheet it is the
+   * sheet's own content, and a tap there can follow a link out of the app entirely.
+   */
+  public async hideKeyboard(options?: { tapOutsideTheInput?: boolean }): Promise<void> {
+    if (!(await this.isKeyboardShown())) {
+      return;
+    }
+
     try {
       await this.toShared().execute('mobile: hideKeyboard', {});
     } catch {
-      this.info('No keyboard to dismiss');
+      this.info('The driver could not dismiss the keyboard');
+    }
+
+    if (!(await this.isKeyboardShown())) {
+      return;
+    }
+
+    if (!options?.tapOutsideTheInput) {
+      this.info('Keyboard is still showing and this caller did not ask for the tap fallback');
+      return;
+    }
+
+    // Above any keyboard and below any header.
+    const { height, width } = await this.getWindowRect();
+    await this.clickOnCoordinates(Math.round(width / 2), Math.round(height * 0.35));
+
+    if (await this.isKeyboardShown()) {
+      this.info('Keyboard is still showing after both attempts to dismiss it');
     }
   }
 
@@ -2719,17 +2854,22 @@ export class DeviceWrapper implements IMobileWrapper {
     }
 
     const action = granted ? 'grant' : 'revoke';
-    // Deliberately not routed through runScriptAndLog: that logs failures and returns, and a silently
-    // ungranted permission is exactly the state this exists to prevent.
-    try {
-      await this.toShared().execute('mobile: shell', {
-        command: 'pm',
-        args: [action, androidAppPackage, 'android.permission.POST_NOTIFICATIONS'],
-      });
-      this.log(`Notification permission ${granted ? 'granted' : 'revoked'}`);
-    } catch (error) {
-      this.log(`Could not ${action} POST_NOTIFICATIONS: ${(error as Error).message}`);
+    // Driven through the adb binary rather than `mobile: shell`, which is gated behind Appium's
+    // `adb_shell` insecure feature and rejected outright unless the server is started with it. That
+    // rejection is indistinguishable from any other shell failure, so the permission was never
+    // granted on any session.
+    //
+    // Failure throws rather than logging: a silently ungranted permission is exactly the state this
+    // exists to prevent, and it resurfaces as an unrelated element-not-found wherever the system
+    // dialog happens to land. `pm` also reports some refusals on stdout while exiting 0, so its
+    // output is checked as well — a grant that took prints nothing.
+    const output = await runScriptOrThrow(
+      `${getAdbFullPath()} -s ${this.getUdid()} shell pm ${action} ${androidAppPackage} android.permission.POST_NOTIFICATIONS`
+    );
+    if (output.trim()) {
+      throw new Error(`Could not ${action} POST_NOTIFICATIONS: ${output.trim()}`);
     }
+    this.log(`Notification permission ${granted ? 'granted' : 'revoked'}`);
   }
 
   public async processPermissions(locator: LocatorsInterface | StrategyExtractionObj) {
@@ -2835,14 +2975,31 @@ export class DeviceWrapper implements IMobileWrapper {
   }
 
   // Sanitize strings by removing new lines and whitespace sequences
-  private sanitizeString(input: string): string {
+  /**
+   * Collapse rendered whitespace so copy can be compared against its localized source.
+   *
+   * A client is free to break one localized string across lines — the "Open URL" confirmation renders
+   * the interpolated URL as its own paragraph — and that layout is not part of what the string says.
+   * Public because assertions outside this class compare rendered copy too.
+   */
+  public sanitizeString(input: string): string {
     // Handle space + newlines as a unit
     return input.replace(/\s*\n+/g, ' ').trim();
   }
 
   /**
    * Asserts that actual text matches expected text.
-   * @throws Error with detailed message if texts don't match
+   *
+   * A difference that survives {@link sanitizeString} but disappears once every run of whitespace is
+   * collapsed is reported rather than thrown. The two clients disagree about redundant whitespace — a
+   * doubled space in a source string renders as two on iOS and one on Android — so failing on it fails the
+   * spec for something no reader of the app can see, on one platform only. Losing the difference silently
+   * would be worse: the annotation surfaces as a step in the report, so the copy can still be corrected at
+   * the source without the suite treating it as a defect in the app.
+   *
+   * Anything that survives the collapse is a real difference in the words and still throws.
+   *
+   * @throws Error if the texts differ by more than whitespace
    */
   private assertTextMatches(actual: string, expected: string, fieldName: string): void {
     const sanitizedActual = this.sanitizeString(actual);
@@ -2850,21 +3007,43 @@ export class DeviceWrapper implements IMobileWrapper {
 
     if (sanitizedExpected === sanitizedActual) {
       this.log(`${fieldName} is correct`);
-    } else {
-      throw new Error(
-        `${fieldName} is incorrect.\nExpected: ${sanitizedExpected}\nActual: ${sanitizedActual}`
-      );
+      return;
     }
+
+    const collapseWhitespace = (value: string) => value.replace(/\s+/g, ' ');
+    if (collapseWhitespace(sanitizedExpected) === collapseWhitespace(sanitizedActual)) {
+      const description = `${fieldName} matches except for whitespace.\nExpected: ${sanitizedExpected}\nActual: ${sanitizedActual}`;
+      this.info(description);
+      this.testInfo.annotations.push({ type: 'copy-whitespace', description });
+      return;
+    }
+
+    throw new Error(
+      `${fieldName} is incorrect.\nExpected: ${sanitizedExpected}\nActual: ${sanitizedActual}`
+    );
   }
 
   /**
    * Checks modal heading and description text against expected values.
    * Uses fallback locators to support both new (id) and legacy (accessibility id) variants on Android.
+   *
+   * The wait is set here rather than left to `findWithFallback`'s 3s default because a modal is
+   * asserted straight after the interaction that raises it, so this has to cover the app rendering it
+   * — and, more importantly, a single page query is not always cheap. On a screen holding a
+   * 10001-character composer one `id` lookup measured 3661ms, which is longer than that default: the
+   * budget bought exactly one attempt, and a modal that arrived a moment later was never seen again.
+   * The allowance has to fit several of the slowest query this suite performs, not one of a fast one.
+   *
    * @param expectedHeading - Expected modal heading string
    * @param expectedDescription - Expected modal description string
+   * @param maxWait - How long to wait for each of the two elements
    * @throws Error if heading or description doesn't match expected text
    */
-  public async checkModalStrings(expectedHeading: string, expectedDescription: string) {
+  public async checkModalStrings(
+    expectedHeading: string,
+    expectedDescription: string,
+    maxWait: number = 15_000
+  ) {
     // Always try new first, fall back to legacy
     const newHeading = new ModalHeading(this).build();
     const legacyHeading = {
@@ -2879,8 +3058,8 @@ export class DeviceWrapper implements IMobileWrapper {
     } as StrategyExtractionObj;
 
     // Locators
-    const elHeading = await this.findWithFallback(newHeading, legacyHeading);
-    const elDescription = await this.findWithFallback(newDescription, legacyDescription);
+    const elHeading = await this.findWithFallback(newHeading, legacyHeading, maxWait);
+    const elDescription = await this.findWithFallback(newDescription, legacyDescription, maxWait);
 
     // Actual text
     const actualHeading = await this.getTextFromElement(elHeading);

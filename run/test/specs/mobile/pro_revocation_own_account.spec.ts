@@ -13,7 +13,7 @@ import { open_Alice1 } from '../../state_builder';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
 import { PRO_BACKEND_CONTEXT } from '../../utils/pro_context';
 import { observeProGrant } from '../../utils/pro_refresh';
-import { forceStopAndRestart } from '../../utils/utilities';
+import { forceStopAndRestart, waitForHomeScreenOrCTA } from '../../utils/utilities';
 
 bothPlatformsIt({
   title: 'A refund revokes Pro from the account itself, not just its plan',
@@ -98,17 +98,18 @@ async function proRevocationOwnAccount(platform: SupportedPlatformsType, testInf
     // proof that is both unrenewable and revoked.
     await revokeAccountPro({ user: alice, revokePayments: true });
     // Forces the poll. Also rebuilds the composer, which on iOS is what re-reads the limit.
-    await forceStopAndRestart(device);
+    //
+    // The relaunch does not wait for the home screen: the upsell below replaces it in the view
+    // hierarchy, so that wait is defeated by the very thing this step goes on to handle.
+    await forceStopAndRestart(device, false);
     // The refund can raise the Pro upsell over the home screen, where it swallows the taps that follow
     // and surfaces as a missing account-ID field several screens from the cause.
     //
     // Dismissed rather than asserted: it is raised off the status the client has fetched, so whether it
     // is up when the home screen renders races the poll, and it is equally absent on an account that is
-    // still subscribed.
-    const upsell = await device.doesElementExist({
-      ...new CTAButtonNegative(device).build(),
-      maxWait: 5000,
-    });
+    // still subscribed. That is why the wait is for either outcome — a plain absence probe would start
+    // before the app had rendered and report "no upsell" for one that was about to appear.
+    const upsell = await waitForHomeScreenOrCTA(device);
     if (upsell) {
       await device.clickOnElementAll(new CTAButtonNegative(device));
     }
@@ -138,6 +139,15 @@ async function proRevocationOwnAccount(platform: SupportedPlatformsType, testInf
  * conversation with no messages is not reliably listed.
  */
 async function openNoteToSelfComposer(device: DeviceWrapper, sessionId: string) {
+  // The Pro upsell can land here rather than on the relaunch that preceded it: it is raised off the
+  // status fetch, so it appears whenever that resolves — measured arriving AFTER the home screen had
+  // already rendered and been seen. Knowing which of the two came first is therefore not enough, and
+  // an upsell sitting over the home screen swallows the tap below and fails as a missing
+  // `New conversation button`, several steps from the cause.
+  //
+  // Dismissing rather than asserting keeps the spec's claim intact: the upsell is genuinely optional,
+  // and equally absent on an account that was never refunded.
+  await device.dismissCTA('negativeButton', 8_000);
   await device.clickOnElementAll(new PlusButton(device));
   await device.clickOnElementAll(new NewMessageOption(device));
   await device.inputText(sessionId, new EnterAccountID(device));

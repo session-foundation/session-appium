@@ -9,6 +9,7 @@ import { SettingsModalsEnableButton } from '../../locators/settings';
 import { open_Alice1_Bob1_friends } from '../../state_builder';
 import { sleepFor } from '../../utils';
 import { closeApp, SupportedPlatformsType } from '../../utils/open_app';
+import { CALLS_PERMISSION_CONTEXT } from '../../utils/pro_context';
 import {
   getDisappearingTestTime,
   getDisappearingTestTiming,
@@ -49,6 +50,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
     platform,
     focusFriendsConvo: true,
     testInfo,
+    testContext: CALLS_PERMISSION_CONTEXT,
   });
   await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   await alice1.clickOnElementAll(new CallButton(alice1));
@@ -76,7 +78,10 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
   }
   await alice1.clickOnElementAll(new CloseSettings(alice1));
   // Alice tries again, call is put through even though Bob has not activated their settings
-  let callEndTimestamp!: number;
+  // Stamped when the call is PLACED, not when it is ended: the control message is created here, so its
+  // disappearing timer starts here too. `hasElementDisappeared` rejects a lifetime under 0.8x the timer
+  // as a product bug, and anchoring on the end charges the call's own duration to that lifetime.
+  const callPlacedTimestamp = Date.now();
   await alice1.clickOnElementAll(new CallButton(alice1));
   await Promise.all([
     (async () => {
@@ -91,7 +96,6 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
         maxWait: 5_000,
       });
       await alice1.clickOnByAccessibilityID('End call button');
-      callEndTimestamp = Date.now();
     })(),
     (async () => {
       await bob1.clickOnByAccessibilityID('Settings');
@@ -108,7 +112,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
       text: callsYouCalled,
       maxWait,
       expectedDuration,
-      actualStartTime: callEndTimestamp,
+      actualStartTime: callPlacedTimestamp,
     }),
     bob1.hasElementDisappeared({
       strategy: 'accessibility id',
@@ -116,7 +120,7 @@ async function disappearingCallMessage1o1Ios(platform: SupportedPlatformsType, t
       text: callsMissedCallFrom,
       maxWait,
       expectedDuration,
-      actualStartTime: callEndTimestamp,
+      actualStartTime: callPlacedTimestamp,
     }),
   ]);
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
@@ -135,6 +139,7 @@ async function disappearingCallMessage1o1Android(
     platform,
     focusFriendsConvo: true,
     testInfo,
+    testContext: CALLS_PERMISSION_CONTEXT,
   });
   await setDisappearingMessage(alice1, ['1:1', timerType, time]);
   await alice1.clickOnElementAll(new CallButton(alice1));
@@ -153,6 +158,12 @@ async function disappearingCallMessage1o1Android(
   await alice1.navigateBack(false);
   await alice1.navigateBack(false);
   // Alice tries again, call is put through even though Bob has not activated their settings
+  // Stamped when the call is PLACED, not when it is ended: the control message is created here, so its
+  // disappearing timer starts here too. `hasElementDisappeared` rejects a lifetime under 0.8x the timer
+  // as a product bug, and anchoring on the end charges the call's own duration to that lifetime —
+  // measured at 7.9s against a 10s timer on one run and passing on the next, entirely on how long the
+  // two waits below took.
+  const callPlacedTimestamp = Date.now();
   await alice1.clickOnElementAll(new CallButton(alice1));
   // Confirm call is put through
   await alice1.waitForTextElementToBePresent({
@@ -168,7 +179,6 @@ async function disappearingCallMessage1o1Android(
     maxWait: 5_000,
   });
   await alice1.clickOnElementById('network.loki.messenger:id/endCallButton');
-  const callEndTimestamp = Date.now();
   // Wait for control message to disappear
   await Promise.all([
     alice1.hasElementDisappeared({
@@ -177,7 +187,7 @@ async function disappearingCallMessage1o1Android(
       text: `You called ${bob.userName}`,
       maxWait,
       expectedDuration,
-      actualStartTime: callEndTimestamp,
+      actualStartTime: callPlacedTimestamp,
     }),
     bob1.hasElementDisappeared({
       strategy: 'id',
@@ -185,7 +195,7 @@ async function disappearingCallMessage1o1Android(
       text: `Missed call from ${alice.userName}`,
       maxWait,
       expectedDuration,
-      actualStartTime: callEndTimestamp,
+      actualStartTime: callPlacedTimestamp,
     }),
   ]);
   await closeApp(alice1, bob1);

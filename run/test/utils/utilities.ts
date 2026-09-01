@@ -6,6 +6,7 @@ import * as util from 'util';
 
 import { sleepFor } from '../../shared/promise_utils';
 import { DeviceWrapper } from '../../types/DeviceWrapper';
+import { CTAHeading } from '../locators/global';
 import { PlusButton } from '../locators/home';
 import { getAdbFullPath } from './binaries';
 import { androidAppActivity, androidAppPackage } from './capabilities_android';
@@ -176,6 +177,55 @@ export async function forceStopAndRestart(
   if (waitForRestart) {
     await device.waitForTextElementToBePresent(new PlusButton(device));
   }
+}
+
+/**
+ * Wait for the app to settle after a relaunch that may raise a CTA, and report whether it did.
+ *
+ * A readiness wait on the home screen alone is wrong wherever a relaunch can raise a CTA: the CTA
+ * replaces the home screen in the view hierarchy, so that wait only succeeds when the CTA is slow —
+ * the spec passes by the app misbehaving. Probing for the CTA alone is equally wrong in the other
+ * direction, because a probe that starts before the app has rendered reports absent for a CTA that is
+ * about to appear.
+ *
+ * Polling for either makes the result independent of which one wins. A caller that requires the CTA
+ * should assert it instead: `checkCTA` waits on its own.
+ *
+ * @returns true if a CTA is covering the home screen, false if the home screen is clear.
+ */
+export async function waitForHomeScreenOrCTA(
+  device: DeviceWrapper,
+  maxWait: number = 60_000
+): Promise<boolean> {
+  const start = Date.now();
+  // Generous, because the budget has to fit a whole query rather than a hoped-for one. A single
+  // `doesElementExist` on this screen measured 11s under four concurrent workers, and a probe whose
+  // window is shorter than that reports "absent" for an element sitting in the page source.
+  const probeWait = 5_000;
+
+  while (Date.now() - start < maxWait) {
+    // A probe can also throw StaleObjectException when the screen changes underneath it. That is "not
+    // settled yet" rather than an answer, and this loop exists to keep looking.
+    const [cta, homeScreen] = await Promise.all([
+      device
+        .doesElementExist({ ...new CTAHeading(device).build(), maxWait: probeWait })
+        .catch(() => false),
+      device
+        .doesElementExist({ ...new PlusButton(device).build(), maxWait: probeWait })
+        .catch(() => false),
+    ]);
+
+    if (cta) {
+      return true;
+    }
+    if (homeScreen) {
+      return false;
+    }
+  }
+
+  throw new Error(
+    `App showed neither the home screen nor a CTA within ${maxWait}ms of relaunching`
+  );
 }
 
 export { verify } from '../../shared/verify';

@@ -37,29 +37,43 @@ async function pushAttachmentsToReport(
  * Converts image buffer to SSIM-compatible ImageData format
  */
 async function bufferToImageData(imageBuffer: Buffer): Promise<ImageData> {
-  const image = sharp(imageBuffer);
-  const { width, height } = await image.metadata();
-  const rawBuffer = await image.raw().toBuffer();
-
-  return {
-    data: new Uint8ClampedArray(rawBuffer),
-    width: width,
-    height: height,
-  };
+  return toImageData(sharp(imageBuffer));
 }
 
 /**
  * Converts file path to SSIM-compatible ImageData format
  */
 async function fileToImageData(filePath: string): Promise<ImageData> {
-  const image = sharp(filePath);
+  return toImageData(sharp(filePath));
+}
+
+/**
+ * The share of the frame's height taken off the bottom before comparing.
+ *
+ * The home indicator lives there, it auto-hides on its own schedule, and whether it is drawn at the
+ * instant of capture has nothing to do with the app. Measured on a failing `app_disguise` comparison:
+ * 6433 differing pixels, 0.203% of the frame, ALL of them in a 15px band 25-39px from the bottom, with
+ * every icon, label and control byte-identical. SSIM is structural rather than per-pixel, so a
+ * high-contrast bar appearing in an otherwise flat black region cost 1.7% of the score — enough to fail
+ * a spec held at 0.99.
+ *
+ * A fraction rather than a pixel count, so it holds across device scales. Both sides are cropped at
+ * comparison time, which leaves the stored baselines untouched.
+ */
+const OS_CHROME_BOTTOM_FRACTION = 0.02;
+
+async function toImageData(image: sharp.Sharp): Promise<ImageData> {
   const { width, height } = await image.metadata();
-  const rawBuffer = await image.raw().toBuffer();
+  const keptHeight = height - Math.ceil(height * OS_CHROME_BOTTOM_FRACTION);
+  const rawBuffer = await image
+    .extract({ left: 0, top: 0, width, height: keptHeight })
+    .raw()
+    .toBuffer();
 
   return {
     data: new Uint8ClampedArray(rawBuffer),
-    width: width,
-    height: height,
+    width,
+    height: keptHeight,
   };
 }
 
@@ -189,6 +203,14 @@ export async function verifyPageScreenshot(
     throw new Error(`SSIM threshold must be between 0 and 1, got: ${threshold}`);
   }
   await setConsistentStatusBar(device);
+  // Dismissed for the same reason the status bar is pinned: it is chrome the OS owns, not state the app
+  // decides, so it moves under a baseline without the app changing. Its layout differs between iOS
+  // runtimes — one extra key shifts every row below it — and no screenshot spec here is asserting
+  // anything about a keyboard.
+  //
+  // Best-effort: `hideKeyboard` treats "there was none" as the desired end state, so a screen without one
+  // is unaffected.
+  await device.hideKeyboard({ tapOutsideTheInput: true });
   try {
     // Get full page screenshot and crop it
     const pageScreenshotBase64 = await device.getScreenshot();

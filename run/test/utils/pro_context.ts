@@ -153,6 +153,46 @@ export type ProTestHookContext = {
 export type ProContext = ProMockContext & ProTestHookContext;
 
 /**
+ * The half of the mobile test context only Android reads, and the mirror of {@link IOSOnlyContext} — the
+ * `android` prefix marks which side a field is currently on, and a field moves out of here the moment
+ * iOS can consume it.
+ */
+export type AndroidOnlyContext = {
+  /**
+   * How the package manager should report this install to the app (Android).
+   *
+   * The in-app review prompt only lets the Path and Theme triggers raise it on a fresh install; when
+   * updated, the Donate trigger is the only one that qualifies. The app derives that from
+   * `firstInstallTime != lastUpdateTime`, and Appium installs over an existing package, so a test
+   * device always reads as updated and those two triggers are unreachable without this.
+   *
+   * A state rather than iOS's install-date shape, and deliberately so: the comparison is against
+   * `lastUpdateTime`, which the harness can neither read nor set, so a date could only ever produce
+   * `updated` — the state that already happens by default. `useActual` restores the package manager's
+   * own answer.
+   *
+   * Applying it also clears the stored review state, since that state is what the flag feeds. The reset
+   * happens once, on the launch carrying the extra, so a spec asserting the prompt appears only once
+   * still holds across a relaunch.
+   */
+  androidInstallState?: 'freshInstall' | 'updated' | 'useActual';
+
+  /**
+   * Whether the runtime notification permission is granted before the spec starts (Android).
+   *
+   * Granted by default, because Android raises the `POST_NOTIFICATIONS` prompt the first time the app
+   * posts a notification — i.e. whenever a message happens to arrive — so left to itself it lands mid-
+   * step and covers whatever the spec was doing.
+   *
+   * `'ask'` leaves it ungranted, for the specs whose SUBJECT is a permission flow: the calls specs
+   * assert the app's own "notifications are required for calls" modal, which the app has no reason to
+   * raise once the permission is already held. Those specs are testing the prompt, so the prompt has to
+   * be reachable.
+   */
+  androidNotificationPermission?: 'ask' | 'granted';
+};
+
+/**
  * The half of the mobile test context only iOS reads.
  *
  * Kept beside `ProContext` rather than in `capabilities_ios` because the boundary between the two moves:
@@ -185,7 +225,7 @@ export type IOSOnlyContext = {
  * `openAndroidApp` as well as `openiOSApp`; Android reads the `ProContext` half as launch-intent extras
  * and ignores the rest.
  */
-export type MobileTestContext = ProContext & IOSOnlyContext;
+export type MobileTestContext = ProContext & IOSOnlyContext & AndroidOnlyContext;
 
 /**
  * A context per device, or one context for all of them.
@@ -204,6 +244,28 @@ export function contextForDevice(
 ): MobileTestContext | undefined {
   return Array.isArray(contexts) ? contexts[index] : contexts;
 }
+
+/**
+ * A device the app should treat as a fresh install (Android).
+ *
+ * The review prompt's Path and Theme triggers only qualify on a fresh install, and Appium always installs
+ * over an existing package — so without this the app reads as updated and those two triggers can never
+ * raise the prompt. iOS ignores the extra.
+ *
+ * Shared rather than redeclared per spec: five specs need exactly this and they must agree, since the
+ * whole point is that the app's `firstInstallTime != lastUpdateTime` derivation is being overridden.
+ */
+export const FRESH_INSTALL_CONTEXT: MobileTestContext = { androidInstallState: 'freshInstall' };
+
+/**
+ * A device that has NOT been granted the notification permission (Android).
+ *
+ * The harness grants `POST_NOTIFICATIONS` up front everywhere else so Android's prompt cannot land
+ * mid-step and cover whatever a spec was doing. The calls specs are the exception: they assert the app's
+ * own "notifications are required for calls" modal, which the app has no reason to raise once the
+ * permission is already held. There the prompt IS the subject, so it has to be reachable.
+ */
+export const CALLS_PERMISSION_CONTEXT: MobileTestContext = { androidNotificationPermission: 'ask' };
 
 /**
  * Pro enabled, talking to the QA Pro backend when one is configured.

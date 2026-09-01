@@ -20,6 +20,10 @@ bothPlatformsIt({
   risk: 'high',
   testCb: resolveONS,
   countOfDevicesNeeded: 1,
+  // `ONS_MAPPINGS.TESTQA` is registered on mainnet, and the local devnet's setup script buys the same
+  // mapping (`service_node_network.py`, `buy_session_ons`). Testnet registers it nowhere, so the name
+  // cannot resolve there however long the test waits.
+  requiresNetwork: ['mainnet', 'devnet'],
   allureSuites: {
     parent: 'New Conversation',
     suite: 'New Message',
@@ -45,9 +49,11 @@ async function resolveONS(platform: SupportedPlatformsType, testInfo: TestInfo) 
     await device.clickOnElementAll(new NextButton(device));
   });
   await test.step(`Verify ONS resolution to pubkey '${expectedPubkey}'`, async () => {
+    // Resolution is a network round trip to a service node, not a local lookup, so this has to cover
+    // one — 5s was shorter than a single Appium page query on a loaded host, let alone a resolve.
     await device.waitForTextElementToBePresent({
       ...new ConversationHeaderName(device, expectedPubkey).build(),
-      maxWait: 5_000,
+      maxWait: 30_000,
     });
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

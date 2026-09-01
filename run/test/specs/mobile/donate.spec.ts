@@ -1,18 +1,17 @@
 import type { TestInfo } from '@playwright/test';
 
-import { tStripped } from '../../../localizer/lib';
 import { bothPlatformsIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
-import { SafariAddressBar, URLInputField } from '../../locators/browsers';
-import { OpenLinkButton } from '../../locators/network_page';
+import { OpenURLDialogConfirmButton } from '../../locators/global';
 import { DonationsMenuItem, UserSettings } from '../../locators/settings';
 import { newUser } from '../../utils/create_account';
-import { handleChromeFirstTimeOpen } from '../../utils/handle_first_open';
+import { getBrowserUrlField } from '../../utils/handle_first_open';
 import {
   closeApp,
   openAppOnPlatformSingleDevice,
   SupportedPlatformsType,
 } from '../../utils/open_app';
+import { checkOpenUrlDialogStrings } from '../../utils/open_url_dialog';
 import { assertUrlIsReachable, ensureHttpsURL, verify } from '../../utils/utilities';
 
 bothPlatformsIt({
@@ -33,19 +32,9 @@ async function donateLinkout(platform: SupportedPlatformsType, testInfo: TestInf
   await newUser(device, USERNAME.ALICE, { saveUserData: false });
   await device.clickOnElementAll(new UserSettings(device));
   await device.clickOnElementAll(new DonationsMenuItem(device));
-  await device.checkModalStrings(
-    tStripped('urlOpen'),
-    tStripped('urlOpenDescription', { url: linkURL })
-  );
-  await device.clickOnElementAll(new OpenLinkButton(device));
-  if (platform === 'ios') {
-    // Tap the Safari address bar to reveal the URL
-    await device.clickOnElementAll(new SafariAddressBar(device));
-  } else {
-    // Chrome can throw some modals on first open
-    await handleChromeFirstTimeOpen(device);
-  }
-  const urlField = await device.waitForTextElementToBePresent(new URLInputField(device));
+  await checkOpenUrlDialogStrings(device, linkURL);
+  await device.clickOnElementAll(new OpenURLDialogConfirmButton(device));
+  const urlField = await getBrowserUrlField(device);
   const actualUrlField = await device.getTextFromElement(urlField);
   const fullRetrievedURL = ensureHttpsURL(actualUrlField);
   // Verify that it's the correct URL

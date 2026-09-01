@@ -1,4 +1,4 @@
-import type { ProContext } from './pro_context';
+import type { AndroidOnlyContext, ProContext } from './pro_context';
 
 import { getDevnetSeedUrl, getServiceNetwork } from './network_target';
 import { getProBackendOverride } from './pro_backend';
@@ -22,7 +22,9 @@ import { getProBackendOverride } from './pro_backend';
  * token as a new flag, so a value must contain **no spaces and no leading hyphen**. URLs, hex keys and
  * enum names are fine; a display string would not be.
  */
-export function buildAndroidLaunchExtras(context?: ProContext): string | undefined {
+export function buildAndroidLaunchExtras(
+  context?: ProContext & AndroidOnlyContext
+): string | undefined {
   const extras: string[] = [];
 
   // The mocked Pro state, for specs asserting how Pro screens *render*. Named for the state being
@@ -78,6 +80,17 @@ export function buildAndroidLaunchExtras(context?: ProContext): string | undefin
   // grant, to reach behaviour the server's 24h poll cadence otherwise puts out of a test run's reach.
   if (context?.forceProRevocationRefresh) {
     extras.push('--es sessionForceProRevocationRefresh true');
+  }
+
+  // Not a Pro key, but the same kind of thing: a fact about the install the harness cannot reach any
+  // other way. A state here against the app's boolean, converted the way `proQuickRefundWindow` above
+  // is, so `useActual` stays distinct from the two real answers rather than collapsing into one.
+  if (context?.androidInstallState) {
+    const updated =
+      context.androidInstallState === 'useActual'
+        ? 'useActual'
+        : String(context.androidInstallState === 'updated');
+    extras.push(`--es sessionAppUpdated ${updated}`);
   }
 
   if ((process.env.NETWORK_TARGET ?? '').trim()) {

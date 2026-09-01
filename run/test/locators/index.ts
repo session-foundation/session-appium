@@ -35,6 +35,28 @@ export abstract class LocatorsInterface {
   }
 }
 
+/**
+ * The rendered Account ID QR code on the Start Conversation sheet.
+ *
+ * Addressed so the QR can be captured on its own. The camera specs inject an image into the emulator's
+ * virtual-scene poster, which is a fixed size — so injecting a whole screenshot puts the code at
+ * whatever fraction of the frame the surrounding layout leaves it, and a code that overflows the frame
+ * cannot be decoded however well the camera works.
+ */
+export class AccountIdQRCode extends LocatorsInterface {
+  public build(): StrategyExtractionObj {
+    switch (this.platform) {
+      case 'android':
+        return {
+          strategy: 'id',
+          selector: 'QR code',
+        } as const;
+      case 'ios':
+        throw new Error('AccountIdQRCode: iOS not implemented; the camera specs are Android-only');
+    }
+  }
+}
+
 export class ApplyChanges extends LocatorsInterface {
   public build() {
     switch (this.platform) {
@@ -130,7 +152,7 @@ export class ClearInputButton extends LocatorsInterface {
         } as const;
       case 'ios':
         return {
-          strategy: 'id',
+          strategy: 'accessibility id',
           selector: 'clear-input-button',
         } as const;
     }
@@ -457,11 +479,21 @@ export class JoinCommunityModalButton extends LocatorsInterface {
   }
 }
 
+/**
+ * The link preview as it appears in the COMPOSER, before the message is sent.
+ *
+ * Distinct from {@link LinkPreviewMessage}, which is the preview on a message already in the
+ * conversation — Android gives the two different ids and a spec that waits for the wrong one either
+ * throws or waits for something that cannot be there yet.
+ */
 export class LinkPreview extends LocatorsInterface {
   public build(): StrategyExtractionObj {
     switch (this.platform) {
       case 'android':
-        throw new Error(`No such element on Android`);
+        return {
+          strategy: 'id',
+          selector: 'network.loki.messenger:id/linkPreviewDraftContainer',
+        };
       case 'ios':
         return {
           strategy: 'accessibility id',

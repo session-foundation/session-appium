@@ -62,7 +62,6 @@ async function messageBubbleAppearance(platform: SupportedPlatformsType, testInf
     await verifyPageScreenshot(alice1, platform, 'conversation_alice', testInfo);
   });
   await test.step(TestSteps.VERIFY.SCREENSHOT('conversation screen (Bob)'), async () => {
-    await bob1.onAndroid().back(); // dismiss keyboard
     await verifyPageScreenshot(bob1, platform, 'conversation_bob', testInfo);
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {

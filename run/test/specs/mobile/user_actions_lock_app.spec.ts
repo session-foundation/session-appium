@@ -1,5 +1,8 @@
 import { test, type TestInfo } from '@playwright/test';
 
+import type { DeviceWrapper } from '../../../types/DeviceWrapper';
+
+import { sleepFor } from '../../../shared/promise_utils';
 import { TestSteps } from '../../../types/allure';
 import { androidIt } from '../../../types/sessionIt';
 import { USERNAME } from '../../../types/testing';
@@ -18,6 +21,38 @@ import {
   SupportedPlatformsType,
 } from '../../utils/open_app';
 import { forceStopAndRestart, runScriptAndLog } from '../../utils/utilities';
+
+/**
+ * Wait until Android's device-credential prompt has taken focus.
+ *
+ * The unlock screen is not in Appium's view, which is why the check here used to be "the home screen's
+ * PlusButton is GONE". That is true both when the prompt is up AND when the app has not finished
+ * launching, so it cannot tell them apart — and a PIN typed on the strength of it goes nowhere. The
+ * failure then surfaces as a missing home screen 30s later, nowhere near the cause.
+ *
+ * `dumpsys window` can see what Appium cannot: the prompt holds focus as `BiometricPrompt` (measured on
+ * the API 34 emulator image this suite uses, where it stayed focused for ~35s). Waiting for it turns an
+ * ambiguous absence into positive evidence that there is something there to type into.
+ */
+async function waitForDeviceCredentialPrompt(
+  device: DeviceWrapper,
+  maxWait: number = 60_000
+): Promise<void> {
+  const start = Date.now();
+
+  while (Date.now() - start < maxWait) {
+    const focus = await runScriptAndLog(
+      `${getAdbFullPath()} -s ${device.udid} shell dumpsys window | grep -m1 mCurrentFocus`
+    );
+    if (focus.includes('BiometricPrompt')) {
+      device.log('Device credential prompt has focus');
+      return;
+    }
+    await sleepFor(1_000);
+  }
+
+  throw new Error(`Device credential prompt did not take focus within ${maxWait}ms`);
+}
 
 // `xcrun simctl` doesn't support adding a pin like adb does so this is an Android only test
 androidIt({
@@ -55,10 +90,7 @@ async function lockApp(platform: SupportedPlatformsType, testInfo: TestInfo) {
     });
     await test.step('Force stop and restart app', async () => {
       await forceStopAndRestart(device, false);
-      // The unlock screen is not visible to appium so there's no real way to tell it appeared
-      // Other than waiting a long time to make sure the home screen (plus button) never appeared
-      // This prevents the false positive where we send key events to nowhere and the lock screen never appeared anyway
-      await device.waitForElementToBeGone({ ...new PlusButton(device).build(), maxWait: 10_000 });
+      await waitForDeviceCredentialPrompt(device);
     });
     await test.step('Enter PIN to unlock app', async () => {
       await runScriptAndLog(`${getAdbFullPath()} -s ${device.udid} shell input text ${pin}`, true);

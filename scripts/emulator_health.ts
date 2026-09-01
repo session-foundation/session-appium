@@ -1,6 +1,20 @@
+import { existsSync } from 'fs';
+import { homedir } from 'os';
+import { join } from 'path';
+
 import { sleepFor } from '../run/test/utils';
 import { getAdbFullPath, getEmulatorFullPath } from '../run/test/utils/binaries';
 import { runScriptAndLog } from '../run/test/utils/utilities';
+
+// These must match create_android_emulators.ts, which creates the AVDs and owns the naming:
+// `${AVD_PREFIX}_${n}`, with its snapshot saved as `qa.snapshot`. An AVD name that does not exist
+// makes every recovery a no-op, and the emulator says so only on stderr.
+const AVD_PREFIX = 'Session_QA';
+const SNAPSHOT_NAME = 'qa.snapshot';
+
+function avdNameFor(emulatorNum: number): string {
+  return `${AVD_PREFIX}_${emulatorNum}`;
+}
 
 const EMULATOR_CONFIG = {
   1: 5554,
@@ -70,11 +84,14 @@ async function waitForEmulatorBoot(
 export async function recoverEmulator(emulatorNum: number): Promise<void> {
   const port = EMULATOR_CONFIG[emulatorNum as keyof typeof EMULATOR_CONFIG];
   const udid = `emulator-${port}`;
-  const avdName = `emulator${emulatorNum}`;
+  const avdName = avdNameFor(emulatorNum);
 
-  console.warn(`[Recovery] ${udid} not running — attempting to recover ${avdName}...`);
+  console.warn(`[Recovery] recovering ${udid} (${avdName})...`);
 
-  // Kill any zombie process
+  // Kill whatever is on this port first. An emulator that still answers adb can be sick in ways
+  // that only a restart clears -- one stopped expiring disappearing messages while reporting
+  // `device`, which read as a product bug across nine specs -- so recovery must not assume the
+  // slot is empty.
   try {
     await runScriptAndLog(`${getAdbFullPath()} -s ${udid} emu kill`, false);
     await sleepFor(2_000);
@@ -82,39 +99,74 @@ export async function recoverEmulator(emulatorNum: number): Promise<void> {
     // Already dead, that's fine
   }
 
-  // Restart from snapshot (mirrors ci.sh start_with_snapshots)
-  const configFile = `$HOME/.android/avd/${avdName}.avd/emulator-user.ini`;
-  const windowX = 100 + (emulatorNum - 1) * 400;
-  await runScriptAndLog(`sed -i "s/^window.x.*/window.x=${windowX}/" ${configFile}`, false);
+  // A snapshot is only present where one was saved (CI). Forcing a load without it fails, and the
+  // failure is invisible below, so cold boot instead.
+  const snapshotDir = join(
+    homedir(),
+    '.android',
+    'avd',
+    `${avdName}.avd`,
+    'snapshots',
+    SNAPSHOT_NAME
+  );
+  const snapshotArgs = existsSync(snapshotDir)
+    ? `-no-snapshot-save -snapshot ${SNAPSHOT_NAME} -force-snapshot-load`
+    : '-no-snapshot-load';
 
+  // Mirrors `bootAvd` in create_android_emulators.ts, which owns these conventions:
+  //  - `-port` is required. Without it the emulator takes the next free port rather than the one
+  //    the suite addresses by udid (capabilities_android.ts hardcodes 5554/5556/5558/5560).
+  //  - the env assignment goes BEFORE `nohup`; only the shell expands `VAR=value cmd`.
+  //  - stdout goes to a file, not /dev/null. A launch that fails -- a wrong AVD name, a missing
+  //    snapshot -- says so on stderr, and discarding it turns "no emulator" into a boot wait that
+  //    runs to its full timeout with nothing to show for it.
+  const display = process.platform === 'linux' ? 'DISPLAY=:0 ' : '';
   await runScriptAndLog(
-    `DISPLAY=:0 nohup ${getEmulatorFullPath()} @${avdName} -gpu host -accel on -no-snapshot-save -snapshot plop.snapshot -force-snapshot-load > /dev/null 2>&1 &`,
+    `${display}nohup "${getEmulatorFullPath()}" @${avdName} -port ${port} ${snapshotArgs} ` +
+      `-no-boot-anim > /tmp/emulator-${port}.log 2>&1 &`,
     false
   );
 
   const booted = await waitForEmulatorBoot(emulatorNum);
   if (!booted) {
-    throw new Error(`[Recovery] ${udid} failed to boot`);
+    throw new Error(
+      `[Recovery] ${udid} failed to boot -- see /tmp/emulator-${port}.log for the emulator's own error`
+    );
   }
 }
 
-async function restartMissingEmulators(): Promise<void> {
-  const missing = await getMissingEmulators();
+/**
+ * `force` recycles every configured emulator rather than only the absent ones.
+ *
+ * Presence is a weak health signal: an emulator can answer adb, report `device` and drive Appium
+ * while a subsystem inside it has stopped. One in that state failed to expire a single disappearing
+ * message across nine specs while the other two in the same runs expired every one, which presented
+ * as a reproducible product bug correlated with message type. Nothing short of a restart clears it,
+ * and nothing this script can probe distinguishes it, so recycling has to be available on demand.
+ */
+async function restartEmulators(force: boolean): Promise<void> {
+  const targets = force ? Object.keys(EMULATOR_CONFIG).map(Number) : await getMissingEmulators();
 
-  if (missing.length === 0) {
+  if (targets.length === 0) {
     console.log('All emulators running');
     return;
   }
 
-  console.log(`Missing emulators: ${missing.join(', ')} — recovering...`);
+  console.log(
+    force
+      ? `Recycling all emulators: ${targets.join(', ')}...`
+      : `Missing emulators: ${targets.join(', ')} — recovering...`
+  );
 
-  const results = await Promise.allSettled(missing.map(num => recoverEmulator(num)));
+  const results = await Promise.allSettled(targets.map(num => recoverEmulator(num)));
   if (results.some(r => r.status === 'rejected')) {
     throw new Error('Emulator recovery failed');
   }
 }
 
-const SCRIPT_TIMEOUT_MS = 5 * 60_000; // 5 minutes
+// A cold boot of the whole fleet does not fit in five minutes: waitForEmulatorBoot alone allows
+// 300s per emulator, so the old budget could fire while a perfectly healthy boot was in progress.
+const SCRIPT_TIMEOUT_MS = 15 * 60_000;
 
 async function main(): Promise<void> {
   const timeout = setTimeout(() => {
@@ -123,7 +175,7 @@ async function main(): Promise<void> {
   }, SCRIPT_TIMEOUT_MS);
 
   try {
-    await restartMissingEmulators();
+    await restartEmulators(process.argv.includes('--force'));
     process.exit(0);
   } catch (error) {
     console.error('Recovery failed:', error);

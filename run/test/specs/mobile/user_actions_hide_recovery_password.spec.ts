@@ -45,7 +45,9 @@ async function hideRecoveryPassword(platform: SupportedPlatformsType, testInfo: 
   // Has recovery password menu item disappeared?
   await device1.waitForElementToBeGone({
     ...new RecoveryPasswordMenuItem(device1).build(),
-    maxWait: 1000,
+    // Measured at 7.2s. Hiding the password writes config and returns to Settings, and the locator
+    // scrolls the list looking for the row on every poll, so the check is not cheap either.
+    maxWait: 15_000,
   });
   // Should be taken back to Settings page after hiding recovery password
   await device1.scrollUp();
