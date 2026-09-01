@@ -20,14 +20,9 @@ bothPlatformsIt({
   risk: 'high',
   testCb: resolveONS,
   countOfDevicesNeeded: 1,
-  // Mainnet only, but NOT because the name is missing elsewhere — the local devnet registers the very
-  // same mapping. `sesh-net/entrypoint.sh` runs `utils/local-devnet/service_node_network.py`, which calls
-  // `buy_session_ons("testqa", "05df4a36…a535")`, and the container log shows the buy succeeding.
-  //
-  // The block is the CLIENT: asked to resolve that name on devnet the app answers "Session was unable to
-  // search for this ONS", i.e. the lookup itself fails rather than returning no match. So this cannot pass
-  // on devnet today, and a failure there would say nothing about ONS resolution. Worth revisiting if that
-  // lookup is ever made to work on devnet — the fixture is already in place for it.
+  // `ONS_MAPPINGS.TESTQA` is registered on mainnet, and the local devnet's setup script buys the same
+  // mapping (`service_node_network.py`, `buy_session_ons`). Testnet registers it nowhere, so the name
+  // cannot resolve there however long the test waits.
   requiresNetwork: ['mainnet', 'devnet'],
   allureSuites: {
     parent: 'New Conversation',

@@ -31,20 +31,16 @@ type MobileItArgs = {
   testCb: (platform: SupportedPlatformsType, testInfo: TestInfo) => Promise<void>;
   shouldSkip?: boolean;
   /**
-   * The service network this test's fixtures only exist on.
+   * The service networks this test's fixtures exist on. A list, because a fixture can exist on more
+   * than one — the ONS name the resolution spec uses is registered on mainnet and bought by the local
+   * devnet's setup script, but on no testnet.
    *
-   * For a test whose subject is registered on one network and nowhere else — an ONS name is the case
-   * this exists for — running anywhere else asserts something that cannot be true. That is not a flake
-   * and not a defect, so it is skipped with the reason named rather than left as a permanent red that
-   * everyone learns to scroll past.
+   * Running a test anywhere its subject is not registered asserts something that cannot be true. That is
+   * not a flake and not a defect, so it is skipped with the reason named rather than left as a permanent
+   * red that everyone learns to scroll past.
    *
    * Declared rather than checked inside the test, so the constraint is visible in the run output and in
    * the file, and so the gap it leaves is countable.
-   */
-  /**
-   * Networks this spec can run on. A list because a fixture can exist on more than one — the ONS
-   * name the resolution spec uses is registered on mainnet AND bought by the local devnet's own setup
-   * script, but not on testnet.
    */
   requiresNetwork?: ServiceNetwork | ServiceNetwork[];
   isPro?: boolean;
