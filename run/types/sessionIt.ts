@@ -41,7 +41,12 @@ type MobileItArgs = {
    * Declared rather than checked inside the test, so the constraint is visible in the run output and in
    * the file, and so the gap it leaves is countable.
    */
-  requiresNetwork?: ServiceNetwork;
+  /**
+   * Networks this spec can run on. A list because a fixture can exist on more than one — the ONS
+   * name the resolution spec uses is registered on mainnet AND bought by the local devnet's own setup
+   * script, but not on testnet.
+   */
+  requiresNetwork?: ServiceNetwork | ServiceNetwork[];
   isPro?: boolean;
   /**
    * How many community rooms this test needs. Against a local SOGS the rooms are created for this
@@ -84,11 +89,17 @@ function mobileIt({
   const testName = `${title} @${platform} @${risk ?? 'default'}-risk @${countOfDevicesNeeded}-devices${proTag}`;
 
   const networkInUse = getServiceNetwork();
-  const wrongNetwork = requiresNetwork !== undefined && requiresNetwork !== networkInUse;
+  const allowedNetworks =
+    requiresNetwork === undefined
+      ? undefined
+      : Array.isArray(requiresNetwork)
+        ? requiresNetwork
+        : [requiresNetwork];
+  const wrongNetwork = allowedNetworks !== undefined && !allowedNetworks.includes(networkInUse);
 
   if (shouldSkip || wrongNetwork) {
     const reason = wrongNetwork
-      ? `it needs ${requiresNetwork} and this run is on ${networkInUse}`
+      ? `it needs ${allowedNetworks?.join(' or ')} and this run is on ${networkInUse}`
       : 'it is marked shouldSkip';
     // Logged at declaration as well as annotated: the annotation reaches Allure, but the local
     // reporter prints only the status, so without this a skipped spec is indistinguishable from one

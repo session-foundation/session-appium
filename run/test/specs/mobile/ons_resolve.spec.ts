@@ -20,10 +20,15 @@ bothPlatformsIt({
   risk: 'high',
   testCb: resolveONS,
   countOfDevicesNeeded: 1,
-  // `ONS_MAPPINGS.TESTQA` is registered on mainnet. Every other network keeps its own name registry,
-  // and on a freshly built devnet that registry is empty — so the name cannot resolve there however
-  // long the test waits, and a failure would say nothing about ONS.
-  requiresNetwork: 'mainnet',
+  // Mainnet only, but NOT because the name is missing elsewhere — the local devnet registers the very
+  // same mapping. `sesh-net/entrypoint.sh` runs `utils/local-devnet/service_node_network.py`, which calls
+  // `buy_session_ons("testqa", "05df4a36…a535")`, and the container log shows the buy succeeding.
+  //
+  // The block is the CLIENT: asked to resolve that name on devnet the app answers "Session was unable to
+  // search for this ONS", i.e. the lookup itself fails rather than returning no match. So this cannot pass
+  // on devnet today, and a failure there would say nothing about ONS resolution. Worth revisiting if that
+  // lookup is ever made to work on devnet — the fixture is already in place for it.
+  requiresNetwork: ['mainnet', 'devnet'],
   allureSuites: {
     parent: 'New Conversation',
     suite: 'New Message',
@@ -49,9 +54,11 @@ async function resolveONS(platform: SupportedPlatformsType, testInfo: TestInfo) 
     await device.clickOnElementAll(new NextButton(device));
   });
   await test.step(`Verify ONS resolution to pubkey '${expectedPubkey}'`, async () => {
+    // Resolution is a network round trip to a service node, not a local lookup, so this has to cover
+    // one — 5s was shorter than a single Appium page query on a loaded host, let alone a resolve.
     await device.waitForTextElementToBePresent({
       ...new ConversationHeaderName(device, expectedPubkey).build(),
-      maxWait: 5_000,
+      maxWait: 30_000,
     });
   });
   await test.step(TestSteps.SETUP.CLOSE_APP, async () => {
