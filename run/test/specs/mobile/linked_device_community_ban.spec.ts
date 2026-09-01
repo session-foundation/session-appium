@@ -197,7 +197,9 @@ async function banAndDeleteLinked(platform: SupportedPlatformsType, testInfo: Te
           [bob1, bob2].map(async device => {
             await device.inputText(msg2, new MessageInput(device));
             await device.clickOnElementAll(new SendButton(device));
-            await device.waitForTextElementToBePresent(new OutgoingMessageStatusFailedToSend(device));
+            await device.waitForTextElementToBePresent(
+              new OutgoingMessageStatusFailedToSend(device)
+            );
           })
         );
       } else {

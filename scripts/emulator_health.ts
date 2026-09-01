@@ -101,7 +101,14 @@ export async function recoverEmulator(emulatorNum: number): Promise<void> {
 
   // A snapshot is only present where one was saved (CI). Forcing a load without it fails, and the
   // failure is invisible below, so cold boot instead.
-  const snapshotDir = join(homedir(), '.android', 'avd', `${avdName}.avd`, 'snapshots', SNAPSHOT_NAME);
+  const snapshotDir = join(
+    homedir(),
+    '.android',
+    'avd',
+    `${avdName}.avd`,
+    'snapshots',
+    SNAPSHOT_NAME
+  );
   const snapshotArgs = existsSync(snapshotDir)
     ? `-no-snapshot-save -snapshot ${SNAPSHOT_NAME} -force-snapshot-load`
     : '-no-snapshot-load';
