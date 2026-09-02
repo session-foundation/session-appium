@@ -156,7 +156,7 @@ export const REFUND_URL_FRAGMENT = {
    * Adding a provider check on top of the window would send an Apple plan to Session's form instead
    * of Apple's own page.
    */
-  googlePlayQuickRefund: 'getsession.org/android-refund',
+  googlePlayQuickRefund: 'getsession.org/refund-android',
   /**
    * The route offered once that window has closed and only Session can action the request — its Pro
    * support form.
