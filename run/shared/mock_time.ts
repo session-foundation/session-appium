@@ -9,14 +9,19 @@ export type TimeOffset = {
   seconds?: number;
 };
 
-/** Apply a relative offset to "now" and return both the Date and its unix (seconds) timestamp. */
+/**
+ * Apply a relative offset to "now" and return both the Date and its unix (seconds) timestamp.
+ *
+ * The offset is elapsed time, not calendar time: both apps compare against a fixed number of seconds
+ * (7 days is 604800), and a calendar step through a daylight-saving change is an hour short or long,
+ * which put "7 days 2 minutes ago" inside the 7-day window for the week after a DST change.
+ */
 function applyTimeOffset(offset: TimeOffset): { date: Date; timestamp: string } {
-  const date = new Date();
-
-  if (offset.days) date.setDate(date.getDate() + offset.days);
-  if (offset.hours) date.setHours(date.getHours() + offset.hours);
-  if (offset.minutes) date.setMinutes(date.getMinutes() + offset.minutes);
-  if (offset.seconds) date.setSeconds(date.getSeconds() + offset.seconds);
+  const offsetMs =
+    ((((offset.days ?? 0) * 24 + (offset.hours ?? 0)) * 60 + (offset.minutes ?? 0)) * 60 +
+      (offset.seconds ?? 0)) *
+    1000;
+  const date = new Date(Date.now() + offsetMs);
 
   const timestamp = String(Math.floor(date.getTime() / 1000));
   return { date, timestamp };
