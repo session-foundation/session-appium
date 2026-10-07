@@ -2381,6 +2381,8 @@ export class DeviceWrapper implements IMobileWrapper {
     } else {
       throw new Error(`Video "${testVideo}" not found after attempting to reveal it.`);
     }
+    // A picked attachment is staged in the input bar until it is sent.
+    await this.clickOnElementAll(new SendButton(this));
     const sentTimestamp = Date.now();
     await this.waitForTextElementToBePresent({
       ...new OutgoingMessageStatusSent(this).build(),
@@ -2465,6 +2467,8 @@ export class DeviceWrapper implements IMobileWrapper {
       } else {
         throw new Error(`File "${testFile}" not found after attempting to reveal it.`);
       }
+      // A picked attachment is staged in the input bar until it is sent.
+      await this.clickOnElementAll(new SendButton(this));
     }
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
@@ -2481,9 +2485,8 @@ export class DeviceWrapper implements IMobileWrapper {
     await this.checkModalStrings(tStripped('giphyWarning'), tStripped('giphyWarningDescription'));
     await this.clickOnByAccessibilityID('Continue', 5000);
     await this.clickOnElementAll(new FirstGif(this));
-    if (this.isIOS()) {
-      await this.clickOnElementAll(new SendButton(this));
-    }
+    // A picked GIF is staged in the input bar until it is sent, on both platforms.
+    await this.clickOnElementAll(new SendButton(this));
     const sentTimestamp = Date.now();
     // Checking Sent status on both platforms
     await this.waitForTextElementToBePresent({
