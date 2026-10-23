@@ -23,7 +23,7 @@ info.
   the `localhost:4728` / `--port 8110` references, belong to a different/legacy path).
 - **Not TypeScript-compiled ahead of time:** specs run through `ts-node`/Playwright's TS
   loader. `pnpm tsc` is typecheck-only (no emit).
-- Node **24.12.0** + pnpm **10.28.1** are pinned (`package.json` `engines`,
+- Node **24.22.1** + pnpm **10.28.1** are pinned (`package.json` `engines`,
   `.tool-versions`, `.nvmrc`, `.mise.toml`). There is a git submodule
   (`run/localizer/lib`) and git-lfs assets.
 
@@ -41,7 +41,7 @@ info.
 ## Setup (one-time)
 
 ```sh
-nvm install && nvm use          # node 24.12.0 (or use mise)
+nvm install && nvm use          # node 24.22.1 (or use mise)
 git lfs install && git lfs pull
 git submodule update --init --recursive
 pnpm install --frozen-lockfile

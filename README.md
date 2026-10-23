@@ -6,7 +6,7 @@ This repository holds the code to run integration tests for Session iOS and Andr
 
 ### Prerequisites
 
-- Node.js 24.12.0
+- Node.js 24.22.1
 - pnpm 10.28.2
 - Git LFS
 
